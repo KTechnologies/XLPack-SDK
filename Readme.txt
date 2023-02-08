@@ -1,4 +1,4 @@
-XLPack SDK (for XLPack 6.0) (July 11, 2022)
+XLPack SDK (for XLPack 6.1) (February 7, 2023)
 
 1. What is "XLPack SDK"
 
@@ -33,6 +33,7 @@ Readme_ja.txt - Read me file (Japanese)
 include\
   cnumlib.h - C interface header file (C language)
   cnumlib - C interface header file (C++)
+  cnumlib_mangling.h - Definitions for old (V6.0) routine names for C interface
   cblas.h - CBLAS header file
   lapacke.h - LAPACKE header file
 lib\
@@ -64,11 +65,11 @@ This software has been tested by using the following environment. The
 modification of sample codes may be required depending on the installation
 conditions.
 
-- XLPack 6.0.5
-- Windows 10 (21H2)
-  - Visual Studio 2022 (17.2.5)
-  - Python 3.7.9 (numpy 1.21.6), 3.10.5 (numpy 1.22.4)
-  - Julia 1.7.3
+- XLPack 6.1.0
+- Windows 10, 11 (22H2)
+  - Visual Studio 2022 (17.4.4)
+  - Python 3.11.1 (numpy 1.24.2), 3.10.9 (numpy 1.24.2)
+  - Julia 1.8.5
   - Free Pascal 3.2.2
 
 4. Documents
@@ -78,4 +79,4 @@ Online manuals are available at our web site(*).
 (*) https://www.ktech.biz
 
 ---
-(C) 2014-2022  K Technologies
+(C) 2014-2023  K Technologies

@@ -1,7 +1,7 @@
 /*****************************************
  *                                       *
  *  Experimental C# interface to XLPack  *
- *  Version 6.0 (June 14, 2022)          *
+ *  Version 6.1 (December 1, 2022)       *
  *  (C) 2014-2022  K Technologies        *
  *                                       *
  *****************************************/
@@ -20,35 +20,35 @@ public static class XLPack
 	const string DLL = "XLPack_32.dll";
 #endif
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_d1num")]
 public extern static double d1num(int i);
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_factorial")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_factorial")]
 public extern static double factorial(uint x, out int errno);
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_li")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_li")]
 public extern static double li(double x, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_ei")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_ei")]
 public extern static double ei(double x, out int errno);
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_digamma")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_digamma")]
 public extern static double digamma(double x, out int errno);
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_besj0")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besj0")]
 public extern static double besj0(double x, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_besj1")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besj1")]
 public extern static double besj1(double x, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_besjnu")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besjnu")]
 public extern static double besjnu(double nu, double x, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_besy0")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besy0")]
 public extern static double besy0(double x, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_besy1")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besy1")]
 public extern static double besy1(double x, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_besynu")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besynu")]
 public extern static double besynu(double nu, double x, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besi0")]
 public extern static double _besi0(double x, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besi0e")]
 public extern static double _besi0e(double x, out int errno);
 
 public static double besi0(double x, out int errno, int kode = 1)
@@ -59,9 +59,9 @@ public static double besi0(double x, out int errno, int kode = 1)
 		return _besi0(x, out errno);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besi1")]
 public extern static double _besi1(double x, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besi1e")]
 public extern static double _besi1e(double x, out int errno);
 
 public static double besi1(double x, out int errno, int kode = 1)
@@ -72,12 +72,12 @@ public static double besi1(double x, out int errno, int kode = 1)
 		return _besi1(x, out errno);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_besinu")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besinu")]
 public extern static double besinu(double nu, double x, out int errno);
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besk0")]
 public extern static double _besk0(double x, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besk0e")]
 public extern static double _besk0e(double x, out int errno);
 
 public static double besk0(double x, out int errno, int kode = 1)
@@ -88,9 +88,9 @@ public static double besk0(double x, out int errno, int kode = 1)
 		return _besk0(x, out errno);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besk1")]
 public extern static double _besk1(double x, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besk1e")]
 public extern static double _besk1e(double x, out int errno);
 
 public static double besk1(double x, out int errno, int kode = 1)
@@ -101,21 +101,21 @@ public static double besk1(double x, out int errno, int kode = 1)
 		return _besk1(x, out errno);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_besknu")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_besknu")]
 public extern static double besknu(double nu, double x, out int errno);
 
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_celli1")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_celli1")]
 public extern static double celli1(double k, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_celli2")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_celli2")]
 public extern static double celli2(double k, out int errno);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_celli3")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "x_celli3")]
 public extern static double celli3(double n, double k, out int errno);
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dconst")]
 public extern static double dconst(int i);
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "dlange")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dlange")]
 private extern static double _dlange(char norm, int m, int n, int lda, double[,] a, double[] work);
 
 public static double dlange(char norm, int m, int n, double[,] a)
@@ -125,7 +125,7 @@ public static double dlange(char norm, int m, int n, double[,] a)
 	return _dlange(norm, m, n, lda, a, work);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "dlansy")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dlansy")]
 private extern static double _dlansy(char norm, char uplo, int n, int lda, double[,] a, double[] work);
 
 public static double dlansy(char norm, char uplo, int n, double[,] a)
@@ -135,7 +135,7 @@ public static double dlansy(char norm, char uplo, int n, double[,] a)
 	return _dlansy(norm, uplo, n, lda, a, work);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "dgesv")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dgesv")]
 public extern static void _dgesv(int n, int nrhs, int lda, double[,] a, int[] ipiv, int ldb, double[] b, out int info);
 
 public static void dgesv(int n, double[,] a, int[] ipiv, double[] b, out int info, int nrhs = 1)
@@ -145,7 +145,7 @@ public static void dgesv(int n, double[,] a, int[] ipiv, double[] b, out int inf
 	_dgesv(n, nrhs, lda, a, ipiv, ldb, b, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "dgecon")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dgecon")]
 private extern static void _dgecon(char norm, int n, int lda, double[,] a, double anorm, out double rcond, double[] work, int[] iwork, out int info);
 
 public static void dgecon(char norm, int n, double[,] a, double anorm, out double rcond, out int info)
@@ -156,7 +156,7 @@ public static void dgecon(char norm, int n, double[,] a, double anorm, out doubl
 	_dgecon(norm, n, lda, a, anorm, out rcond, work, iwork, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "dposv")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dposv")]
 public extern static void _dposv(char uplo, int n, int nrhs, int lda, double[,] a, int ldb, double[] b, out int info);
 
 public static void dposv(char uplo, int n, double[,] a, double[] b, out int info, int nrhs = 1)
@@ -166,7 +166,7 @@ public static void dposv(char uplo, int n, double[,] a, double[] b, out int info
 	_dposv(uplo, n, nrhs, lda, a, ldb, b, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "dpocon")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dpocon")]
 private extern static void _dpocon(char uplo, int n, int lda, double[,] a, double anorm, out double rcond, double[] work, int[] iwork, out int info);
 
 public static void dpocon(char uplo, int n, double[,] a, double anorm, out double rcond, out int info)
@@ -177,7 +177,7 @@ public static void dpocon(char uplo, int n, double[,] a, double anorm, out doubl
 	_dpocon(uplo, n, lda, a, anorm, out rcond, work, iwork, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "dsyev")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dsyev")]
 private extern static void _dsyev(char jobz, char uplo, int n, int lda, double[,] a, double[] w, double[] work, int lwork, out int info);
 
 public static void dsyev(char jobz, char uplo, int n, double[,] a, double[] w, out int info)
@@ -193,7 +193,7 @@ public static void dsyev(char jobz, char uplo, int n, double[,] a, double[] w, o
 	}
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "dgels")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dgels")]
 private extern static void _dgels(char trans, int m, int n, int nrhs, int lda, double[,] a, int ldb, double[] b, double[] work, int lwork, out int info);
 
 public static void dgels(char trans, int m, int n, double[,] a, double[] b, out int info, int nrhs = 1)
@@ -210,7 +210,7 @@ public static void dgels(char trans, int m, int n, double[,] a, double[] b, out 
 	}
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "dgecov")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dgecov")]
 public extern static void _dgecov(int job, int n, int lda, double[,] a, double[] ci, out int info);
 
 public static void dgecov(int job, int n, double[,] a, double[] ci, out int info)
@@ -219,7 +219,7 @@ public static void dgecov(int job, int n, double[,] a, double[] ci, out int info
 	_dgecov(job, n, lda, a, ci, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "pchse")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_pchse")]
 private extern static void _pchse(int n, double[] x, double[] f, double[] d, int incfd, double[] work, int lwork, out int info);
 
 public static void pchse(int n, double[] x, double[] f, double[] d, out int info, int incfd = 1)
@@ -229,7 +229,7 @@ public static void pchse(int n, double[] x, double[] f, double[] d, out int info
 	_pchse(n, x, f, d, incfd, work, lwork, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "pchfe")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_pchfe")]
 public extern static void _pchfe(int n, double[] x, double[] f, double[] d, int incfd, int skip, int ne, double[] xe, double[] fe, out int info);
 
 public static void pchfe(int n, double[] x, double[] f, double[] d, int ne, double[] xe, double[] fe, out int info, int incfd = 1, int skip = 0)
@@ -237,7 +237,7 @@ public static void pchfe(int n, double[] x, double[] f, double[] d, int ne, doub
 	_pchfe(n, x, f, d, incfd, skip, ne, xe, fe, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "pchia")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_pchia")]
 public extern static double _pchia(int n, double[] x, double[] f, double[] d, int incfd, int skip, double a, double b, out int info);
 
 public static double pchia(int n, double[] x, double[] f, double[] d, double a, double b, out int info, int incfd = 1, int skip = 0)
@@ -245,7 +245,7 @@ public static double pchia(int n, double[] x, double[] f, double[] d, double a, 
 	return _pchia(n, x, f, d, incfd, skip, a, b, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "rpzero2")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_rpzero2")]
 private extern static void _rpzero2(int n, double[] a, double[] rr, double[] ri, int iflag, int maxiter, out int iter, double[] s, double[] work, out int info);
 
 public static void rpzero2(int n, double[] a, double[] rr, double[] ri, out int iter, double[] s, out int info, int iflag = 0, int maxiter = -1)
@@ -257,7 +257,7 @@ public static void rpzero2(int n, double[] a, double[] rr, double[] ri, out int 
 	_rpzero2(n, a, rr, ri, iflag, maxiter, out iter, s, work, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "dfzero_r")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dfzero_r")]
 private extern static void _dfzero_r(out double b, out double c, double r, double re, double ae, out int info, out double xx, double yy, out int irev);
 
 public delegate double DfzeroFunc(double x);
@@ -276,7 +276,7 @@ public static void dfzero(DfzeroFunc f, out double b, out double c, double r, ou
 	} while (irev != 0);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "hybrd1_r")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_hybrd1_r")]
 private extern static void _hybrd1_r(int n, double[] x, double[] fvec, double tol, double[] work, int lwork, out int info, double[] xx, double[] yy, out int irev);
 
 public delegate void Hybrd1Proc(int n, double[] x, double[] fvec, ref int iflag);
@@ -312,7 +312,7 @@ public static void hybrd1(Hybrd1Proc fcn, int n, double[] x, double[] fvec, out 
 	} while (irev != 0);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "dfmin_r")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dfmin_r")]
 private extern static void _dfmin_r(double a, double b, double tol, out double xx, double yy, out int irev);
 
 public delegate double DfminFunc(double x);
@@ -332,7 +332,7 @@ public static double dfmin(double a, double b, DfminFunc f, double tol = 1.0e-10
 	return xx;
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "optif0_r")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_optif0_r")]
 private extern static void _optif0_r(int n, double[] x, double[] xpls, out double fpls, double[] work, int lwork, out int info, double[] xx, double yy, out int irev);
 
 public delegate void Optif0Proc(int n, double[] x, out double fval);
@@ -361,7 +361,7 @@ public static void optif0(int n, double[] x, Optif0Proc fcn, double[] xpls, out 
 	} while (irev != 0);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "qk15_r")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_qk15_r")]
 private extern static void _qk15_r(double a, double b, out double result, out double abserr, out double resabs, out double resasc, out double xx, double yy, out int irev);
 
 public delegate double Qk15Func(double x);
@@ -380,7 +380,7 @@ public static void qk15(Qk15Func f, double a, double b, out double result, out d
 	} while (irev != 0);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "qag_r")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_qag_r")]
 private extern static void _qag_r(double a, double b, double epsabs, double epsrel, int key, int limit, out double result, out double abserr, out int neval, out int last, double[] work, int lwork, int[] iwork, out int info, out double xx, double yy, out int irev);
 
 public delegate double QagFunc(double x);
@@ -412,7 +412,7 @@ public static void qag(QagFunc f, double a, double b, out double result, out dou
 	} while (irev != 0);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "qagi_r")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_qagi_r")]
 private extern static void _qagi_r(double bound, int inf, double epsabs, double epsrel, int limit, out double result, out double abserr, out int neval, out int last, double[] work, int lwork, int[] iwork, out int info, out double xx, double yy, out int irev);
 
 public delegate double QagiFunc(double x);
@@ -444,7 +444,7 @@ public static void qagi(QagiFunc f, double bound, int inf, out double result, ou
 	} while (irev != 0);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "derkf_r")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_derkf_r")]
 private extern static void _derkf_r(int n, ref double t, double[] y, double tout, ref double rtol, ref double atol, int itol, int mode, double[] work, int lwork, int[] iwork, int liwork, out int info, out double tt, double[] yy, double[] yyp, out int irev);
 
 public delegate void DerkfProc(int n, double t, double[] y, double[] yp);
@@ -480,7 +480,7 @@ public static void derkf(int n, DerkfProc fcn, ref double t, double[] y, double 
 		info = info + 5;
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "derkf_int")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_derkf_int")]
 private extern static void _derkf_int(int n, double t, double[] y, double[] work);
 
 public static void derkf_int(int n, double t, double[] y, double[] work)
@@ -490,7 +490,7 @@ public static void derkf_int(int n, double t, double[] y, double[] work)
 	_derkf_int(n, t, y, work);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "rfft1f")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_rfft1f")]
 private extern static void _rfft1f(int n, int inc, double[] r, int lr, double[] wsave, int lwsave, double[] work, int lwork, out int info);
 
 public static void rfft1f(int n, double[] r, double[] wsave, out int info, int inc = 1)
@@ -508,7 +508,7 @@ public static void rfft1f(int n, double[] r, double[] wsave, out int info, int i
 	_rfft1f(n, inc, r, lr, wsave, lwsave, work, lwork, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "rfft1b")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_rfft1b")]
 private extern static void _rfft1b(int n, int inc, double[] r, int lr, double[] wsave, int lwsave, double[] work, int lwork, out int info);
 
 public static void rfft1b(int n, double[] r, double[] wsave, out int info, int inc = 1)
@@ -526,7 +526,7 @@ public static void rfft1b(int n, double[] r, double[] wsave, out int info, int i
 	_rfft1b(n, inc, r, lr, wsave, lwsave, work, lwork, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "rfft1i")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_rfft1i")]
 public extern static void _rfft1i(int n, double[] wsave, int lwsave, out int info);
 
 public static void rfft1i(int n, double[] wsave, out int info)
@@ -540,7 +540,7 @@ public static void rfft1i(int n, double[] wsave, out int info)
 	_rfft1i(n, wsave, lwsave, out info);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "lmdif1_r")]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_lmdif1_r")]
 private extern static void _lmdif1_r(int m, int n, double[] x, double[] fvec, double tol, double[] work, int lwork, int[] iwork, out int info, double[] xx, double[] yy, out int irev);
 
 public delegate void Lmdif1Proc(int m, int n, double[] x, double[] fvec, ref int iflag);
@@ -582,16 +582,16 @@ public static void lmdif1(Lmdif1Proc fcn, int m, int n, double[] x, double[] fve
 	} while (irev != 0);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_init_genrand")]
 public extern static void init_genrand(uint s);
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_genrand_int32")]
 public extern static uint genrand_int32();
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_genrand_int31")]
 public extern static int genrand_int31();
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_genrand_res53")]
 public extern static double genrand_res53();
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl)]
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dlamch")]
 public extern static double dlamch(char cmach);
 
 }

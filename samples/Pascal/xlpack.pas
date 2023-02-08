@@ -1,7 +1,7 @@
 {*********************************************
  *                                           *
  *  Experimental Delphi interface to XLPack  *
- *  Version 6.0 (February 12, 2022)          *
+ *  Version 6.1 (December 1, 2022)           *
  *  (C) 2014-2022  K Technologies            *
  *                                           *
  *********************************************}
@@ -23,41 +23,41 @@ const
 	dll = 'XLPack_32.dll';
 {$Endif}
 
-function D1num(i: Integer): Double; cdecl; external dll name 'd1num';
+function D1num(i: Integer): Double; cdecl; external dll name '_d1num';
 
-function Factorial(x: Cardinal; var errno: Integer): Double; cdecl; external dll name '_factorial';
+function Factorial(x: Cardinal; var errno: Integer): Double; cdecl; external dll name 'x_factorial';
 
 function Chebs(var c: array of Double; n: Integer; x: Double; var errno: Integer): Double;
 
-function Sqrt1pm1(x: Double; var errno: Integer): Double; cdecl; external dll name '_sqrt1pm1';
-function Powm1(x, y: Double; var errno: Integer): Double; cdecl; external dll name '_powm1';
-function Cospi(x: Double; var errno: Integer): Double; cdecl; external dll name '_cos_pi';
-function Sinpi(x: Double; var errno: Integer): Double; cdecl; external dll name '_sin_pi';
+function Sqrt1pm1(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_sqrt1pm1';
+function Powm1(x, y: Double; var errno: Integer): Double; cdecl; external dll name 'x_powm1';
+function Cospi(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_cos_pi';
+function Sinpi(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_sin_pi';
 
-function Li(x: Double; var errno: Integer): Double; cdecl; external dll name '_li';
-function Ei(x: Double; var errno: Integer): Double; cdecl; external dll name '_ei';
-function E1(x: Double; var errno: Integer): Double; cdecl; external dll name '_e1';
+function Li(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_li';
+function Ei(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_ei';
+function E1(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_e1';
 
-function Digamma(x: Double; var errno: Integer): Double; cdecl; external dll name '_digamma';
+function Digamma(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_digamma';
 
-function Besj0(x: Double; var errno: Integer): Double; cdecl; external dll name '_besj0';
-function Besj1(x: Double; var errno: Integer): Double; cdecl; external dll name '_besj1';
-function Besjnu(nu: Double; x: Double; var errno: Integer): Double; cdecl; external dll name '_besjnu';
-function Besy0(x: Double; var errno: Integer): Double; cdecl; external dll name '_besy0';
-function Besy1(x: Double; var errno: Integer): Double; cdecl; external dll name '_besy1';
-function Besynu(nu: Double; x: Double; var errno: Integer): Double; cdecl; external dll name '_besynu';
+function Besj0(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besj0';
+function Besj1(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besj1';
+function Besjnu(nu: Double; x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besjnu';
+function Besy0(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besy0';
+function Besy1(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besy1';
+function Besynu(nu: Double; x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besynu';
 function Besi0(x: Double; var errno: Integer; kode: Integer = 1): Double;
 function Besi1(x: Double; var errno: Integer; kode: Integer = 1): Double;
-function Besinu(nu: Double; x: Double; var errno: Integer): Double; cdecl; external dll name '_besinu';
+function Besinu(nu: Double; x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besinu';
 function Besk0(x: Double; var errno: Integer; kode: Integer = 1): Double;
 function Besk1(x: Double; var errno: Integer; kode: Integer = 1): Double;
-function Besknu(nu: Double; x: Double; var errno: Integer): Double; cdecl; external dll name '_besknu';
+function Besknu(nu: Double; x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besknu';
 
-function Celli1(k: Double; var errno: Integer): Double; cdecl; external dll name '_celli1';
-function Celli2(k: Double; var errno: Integer): Double; cdecl; external dll name '_celli2';
-function Celli3(n: Double; k: Double; var errno: Integer): Double; cdecl; external dll name '_celli3';
+function Celli1(k: Double; var errno: Integer): Double; cdecl; external dll name 'x_celli1';
+function Celli2(k: Double; var errno: Integer): Double; cdecl; external dll name 'x_celli2';
+function Celli3(n: Double; k: Double; var errno: Integer): Double; cdecl; external dll name 'x_celli3';
 
-function Dconst(i: Integer): Double; cdecl; external dll name 'dconst';
+function Dconst(i: Integer): Double; cdecl; external dll name '_dconst';
 
 function Dlange(norm: Char; m, n, lda: Integer; var a: array of Double): Double;
 function Dlansy(norm, uplo: Char; n, lda: Integer; var a: array of Double): Double;
@@ -107,12 +107,12 @@ procedure Rfft1i(n: Integer; var wsave: array of Double; var info: Integer);
 type Lmdif1_Proc = procedure (m, n: Integer; var x, fvec: array of Double; var iflag: Integer);
 procedure Lmdif1(f: Lmdif1_Proc; m, n: Integer; var x, fvec: array of Double; var info: Integer; tol: Double = 1.0e-10);
 
-procedure InitGenRand(s: Cardinal); cdecl; external dll name 'init_genrand';
-function GenRandInt32: Cardinal; cdecl; external dll name 'genrand_int32';
-function GenRandInt31: Integer; cdecl; external dll name 'genrand_int31';
-function GenRandRes53: Double; cdecl; external dll name 'genrand_res53';
+procedure InitGenRand(s: Cardinal); cdecl; external dll name '_init_genrand';
+function GenRandInt32: Cardinal; cdecl; external dll name '_genrand_int32';
+function GenRandInt31: Integer; cdecl; external dll name '_genrand_int31';
+function GenRandRes53: Double; cdecl; external dll name '_genrand_res53';
 
-function Dlamch(cmach: Char): Double; cdecl; external dll name 'dlamch';
+function Dlamch(cmach: Char): Double; cdecl; external dll name '_dlamch';
 
 {*******************}
    implementation
@@ -120,56 +120,56 @@ function Dlamch(cmach: Char): Double; cdecl; external dll name 'dlamch';
 
 {** External functions **}
 
-function _chebs(var c: Double; n: Integer; x: Double; var errno: Integer): Double; cdecl; external dll;
+function _chebs(var c: Double; n: Integer; x: Double; var errno: Integer): Double; cdecl; external dll name 'x_chebs';
 
-function _besi0(x: Double; var errno: Integer): Double; cdecl; external dll;
-function _besi0e(x: Double; var errno: Integer): Double; cdecl; external dll;
-function _besi1(x: Double; var errno: Integer): Double; cdecl; external dll;
-function _besi1e(x: Double; var errno: Integer): Double; cdecl; external dll;
+function _besi0(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besi0';
+function _besi0e(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besi0e';
+function _besi1(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besi1';
+function _besi1e(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besi1e';
 
-function _besk0(x: Double; var errno: Integer): Double; cdecl; external dll;
-function _besk0e(x: Double; var errno: Integer): Double; cdecl; external dll;
-function _besk1(x: Double; var errno: Integer): Double; cdecl; external dll;
-function _besk1e(x: Double; var errno: Integer): Double; cdecl; external dll;
+function _besk0(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besk0';
+function _besk0e(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besk0e';
+function _besk1(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besi1';
+function _besk1e(x: Double; var errno: Integer): Double; cdecl; external dll name 'x_besi1e';
 
-function XL_Dlange(norm: Char; m, n, lda: Integer; var a, work: Double): Double; cdecl; external dll name 'dlange';
-function XL_Dlansy(norm, uplo: Char; n, lda: Integer; var a, work: Double): Double; cdecl; external dll name 'dlansy';
+function XL_Dlange(norm: Char; m, n, lda: Integer; var a, work: Double): Double; cdecl; external dll name '_dlange';
+function XL_Dlansy(norm, uplo: Char; n, lda: Integer; var a, work: Double): Double; cdecl; external dll name '_dlansy';
 
-procedure XL_Dgesv(n, nrhs, lda: Integer; var a: Double; var ipiv: Integer; ldb: Integer; var b: Double; var info: Integer); cdecl; external dll name 'dgesv';
-procedure XL_Dgecon(norm: Char; n, lda: Integer; var a: Double; anorm: Double; var rcond: Double; var work: Double; var iwork: Integer; var info: Integer); cdecl; external dll name 'dgecon';
+procedure XL_Dgesv(n, nrhs, lda: Integer; var a: Double; var ipiv: Integer; ldb: Integer; var b: Double; var info: Integer); cdecl; external dll name '_dgesv';
+procedure XL_Dgecon(norm: Char; n, lda: Integer; var a: Double; anorm: Double; var rcond: Double; var work: Double; var iwork: Integer; var info: Integer); cdecl; external dll name '_dgecon';
 
-procedure XL_Dposv(uplo: Char; n, nrhs, lda: Integer; var a: Double; ldb: Integer; var b: Double; var info: Integer); cdecl; external dll name 'dposv';
-procedure XL_Dpocon(uplo: Char; n, lda: Integer; var a: Double; anorm: Double; var rcond, work: Double; var iwork, info: Integer); cdecl; external dll name 'dpocon';
+procedure XL_Dposv(uplo: Char; n, nrhs, lda: Integer; var a: Double; ldb: Integer; var b: Double; var info: Integer); cdecl; external dll name '_dposv';
+procedure XL_Dpocon(uplo: Char; n, lda: Integer; var a: Double; anorm: Double; var rcond, work: Double; var iwork, info: Integer); cdecl; external dll name '_dpocon';
 
-procedure XL_Dsyev(jobz, uplo: Char; n, lda: Integer; var a, w, work: Double; lwork: Integer; var info: Integer); cdecl; external dll name 'dsyev';
+procedure XL_Dsyev(jobz, uplo: Char; n, lda: Integer; var a, w, work: Double; lwork: Integer; var info: Integer); cdecl; external dll name '_dsyev';
 
-procedure XL_Dgels(trans: Char; m, n, nrhs, lda: Integer; var a: Double; ldb: Integer; var b, work: Double; lwork: Integer; var info: Integer); cdecl; external dll name 'dgels';
-procedure XL_Dgecov(job, n, lda: Integer; var a: Double; var ci: Double; var info: Integer); cdecl; external dll name 'dgecov';
+procedure XL_Dgels(trans: Char; m, n, nrhs, lda: Integer; var a: Double; ldb: Integer; var b, work: Double; lwork: Integer; var info: Integer); cdecl; external dll name '_dgels';
+procedure XL_Dgecov(job, n, lda: Integer; var a: Double; var ci: Double; var info: Integer); cdecl; external dll name '_dgecov';
 
-procedure XL_Pchse(n: Integer; var x, f, d: Double; incfd: Integer; var work: Double; lwork: Integer; var info: Integer); cdecl; external dll name 'pchse';
-procedure XL_Pchfe(n: Integer; var x, f, d: Double; incfd, skip, ne: Integer; var xe, fe: Double; var info: Integer); cdecl; external dll name 'pchfe';
-function XL_Pchia(n: Integer; var x, f, d: Double; incfd, skip: Integer; a, b: Double; var info: Integer): Double; cdecl; external dll name 'pchia';
+procedure XL_Pchse(n: Integer; var x, f, d: Double; incfd: Integer; var work: Double; lwork: Integer; var info: Integer); cdecl; external dll name '_pchse';
+procedure XL_Pchfe(n: Integer; var x, f, d: Double; incfd, skip, ne: Integer; var xe, fe: Double; var info: Integer); cdecl; external dll name '_pchfe';
+function XL_Pchia(n: Integer; var x, f, d: Double; incfd, skip: Integer; a, b: Double; var info: Integer): Double; cdecl; external dll name '_pchia';
 
-procedure XL_Rpzero2(n: Integer; var a, zr, zi: Double; iflag, maxiter: Integer; var iter: Integer; var s, work: Double; var info: Integer); cdecl; external dll name 'rpzero2';
+procedure XL_Rpzero2(n: Integer; var a, zr, zi: Double; iflag, maxiter: Integer; var iter: Integer; var s, work: Double; var info: Integer); cdecl; external dll name '_rpzero2';
 
-procedure XL_Dfzero_r(var b, c: Double; r, re, ae: Double; var info: Integer; var xx: Double; yy: Double; var irev: Integer); cdecl; external dll name 'dfzero_r';
-procedure XL_Hybrd1_r(n: Integer; var x, fvec: Double; xtol: Double; var work: Double; lwork: Integer; var info: Integer; var xx, yy: Double; var irev: Integer); cdecl; external dll name 'hybrd1_r';
+procedure XL_Dfzero_r(var b, c: Double; r, re, ae: Double; var info: Integer; var xx: Double; yy: Double; var irev: Integer); cdecl; external dll name '_dfzero_r';
+procedure XL_Hybrd1_r(n: Integer; var x, fvec: Double; xtol: Double; var work: Double; lwork: Integer; var info: Integer; var xx, yy: Double; var irev: Integer); cdecl; external dll name '_hybrd1_r';
 
-procedure XL_Dfmin_r(a, b, tol: Double; var xx: Double; yy: Double; var irev: Integer); cdecl; external dll name 'dfmin_r';
-procedure XL_Optif0_r(n: Integer; var x, xpls, fpls, work: Double; lwork: Integer; var info: Integer; var xx: Double; yy: Double; var irev: Integer); cdecl; external dll name 'optif0_r';
+procedure XL_Dfmin_r(a, b, tol: Double; var xx: Double; yy: Double; var irev: Integer); cdecl; external dll name '_dfmin_r';
+procedure XL_Optif0_r(n: Integer; var x, xpls, fpls, work: Double; lwork: Integer; var info: Integer; var xx: Double; yy: Double; var irev: Integer); cdecl; external dll name '_optif0_r';
 
-procedure XL_Qk15_r(a, b: Double; var result, abserr, resabs, resasc, xx: Double; yy: Double; var irev: Integer); cdecl; external dll name 'qk15_r';
-procedure XL_Qag_r(a, b, epsabs, epsrel: Double; key, limit: Integer; var result, abserr: Double; var neval, last: Integer; var work: Double; lwork: Integer; var iwork, info: Integer; var xx: Double; yy: Double; var irev: Integer); cdecl; external dll name 'qag_r';
-procedure XL_Qagi_r(bound: Double; inf: Integer; epsabs, epsrel: Double; limit: Integer; var result, abserr: Double; var neval, last: Integer; var work: Double; lwork: Integer; var iwork, info: Integer; var xx: Double; yy: Double; var irev: Integer); cdecl; external dll name 'qagi_r';
+procedure XL_Qk15_r(a, b: Double; var result, abserr, resabs, resasc, xx: Double; yy: Double; var irev: Integer); cdecl; external dll name '_qk15_r';
+procedure XL_Qag_r(a, b, epsabs, epsrel: Double; key, limit: Integer; var result, abserr: Double; var neval, last: Integer; var work: Double; lwork: Integer; var iwork, info: Integer; var xx: Double; yy: Double; var irev: Integer); cdecl; external dll name '_qag_r';
+procedure XL_Qagi_r(bound: Double; inf: Integer; epsabs, epsrel: Double; limit: Integer; var result, abserr: Double; var neval, last: Integer; var work: Double; lwork: Integer; var iwork, info: Integer; var xx: Double; yy: Double; var irev: Integer); cdecl; external dll name '_qagi_r';
 
-procedure XL_Derkf_r(n: Integer; var t: Double; var y: Double; tout: Double; var rtol, atol: Double; itol, mode: Integer; var work: Double; lwork: Integer; var iwork: Integer; liwork: Integer; var info: Integer; var tt, yy, yyp: Double; var irev: Integer); cdecl; external dll name 'derkf_r';
-procedure XL_DerkfInt(n: Integer; t: Double; var y: Double; var work: Double); cdecl; external dll name 'derkf_int';
+procedure XL_Derkf_r(n: Integer; var t: Double; var y: Double; tout: Double; var rtol, atol: Double; itol, mode: Integer; var work: Double; lwork: Integer; var iwork: Integer; liwork: Integer; var info: Integer; var tt, yy, yyp: Double; var irev: Integer); cdecl; external dll name '_derkf_r';
+procedure XL_DerkfInt(n: Integer; t: Double; var y: Double; var work: Double); cdecl; external dll name '_derkf_int';
 
-procedure XL_Rfft1f(n, inc: Integer; var r: Double; lr: Integer; var wsave: Double; lwsave: Integer; var work: Double; lwork: Integer; var info: Integer); cdecl; external dll name 'rfft1f';
-procedure XL_Rfft1b(n, inc: Integer; var r: Double; lr: Integer; var wsave: Double; lwsave: Integer; var work: Double; lwork: Integer; var info: Integer); cdecl; external dll name 'rfft1b';
-procedure XL_Rfft1i(n: Integer; var wsave: Double; lwsave: Integer; var info: Integer); cdecl; external dll name 'rfft1i';
+procedure XL_Rfft1f(n, inc: Integer; var r: Double; lr: Integer; var wsave: Double; lwsave: Integer; var work: Double; lwork: Integer; var info: Integer); cdecl; external dll name '_rfft1f';
+procedure XL_Rfft1b(n, inc: Integer; var r: Double; lr: Integer; var wsave: Double; lwsave: Integer; var work: Double; lwork: Integer; var info: Integer); cdecl; external dll name '_rfft1b';
+procedure XL_Rfft1i(n: Integer; var wsave: Double; lwsave: Integer; var info: Integer); cdecl; external dll name '_rfft1i';
 
-procedure XL_Lmdif1_r(m, n: Integer; var x, fvec: Double; tol: Double; var work: Double; lwork: Integer; var iwork: Integer; var info: Integer; var xx, yy: Double; var irev: Integer); cdecl; external dll name 'lmdif1_r';
+procedure XL_Lmdif1_r(m, n: Integer; var x, fvec: Double; tol: Double; var work: Double; lwork: Integer; var iwork: Integer; var info: Integer; var xx, yy: Double; var irev: Integer); cdecl; external dll name '_lmdif1_r';
 
 {** Function definitions **}
 

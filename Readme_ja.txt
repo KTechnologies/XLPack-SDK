@@ -1,4 +1,4 @@
-XLPack SDK (XLPack 6.0用) (2022.7.11)
+XLPack SDK (XLPack 6.1用) (2023.2.7)
 
 1. XLPack SDKとは
 
@@ -32,6 +32,7 @@ Readme.txt - 説明ファイル (英文)
 include\
   cnumlib.h - Cインターフェース・ヘッダーファイル (C言語)
   cnumlib - Cインターフェース・ヘッダーファイル (C++)
+  cnumlib_mangling.h - Cインターフェース 旧(V6.0)ルーチン名定義
   cblas.h - CBLASヘッダーファイル
   lapacke.h - LAPACKEヘッダーファイル
 lib\
@@ -60,11 +61,11 @@ samples\
 下記ソフトウェアを使用して確認を行っています. インストール状態によっては使用例そ
 のままでは動作せず修正が必要な場合があります.
 
-・XLPack 6.0.5
-・Windows 10 (21H2)
-  ・Visual Studio 2022 (17.2.5)
-  ・Python 3.7.9 (numpy 1.21.6), 3.10.5 (numpy 1.22.4)
-  ・Julia 1.7.3
+・XLPack 6.1.0
+・Windows 10, 11 (22H2)
+  ・Visual Studio 2022 (17.4.4)
+  ・Python 3.11.1 (numpy 1.24.2), 3.10.9 (numpy 1.24.2)
+  ・Julia 1.8.5
   ・Free Pascal 3.2.2
 
 5. ドキュメント
@@ -74,4 +75,4 @@ samples\
 (*) https://www.ktech.biz/jp/
 
 ---
-(C) 2014-2022  K Technologies
+(C) 2014-2023  K Technologies
