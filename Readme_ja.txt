@@ -74,5 +74,10 @@ samples\
 
 (*) https://www.ktech.biz/jp/
 
+6. Cインターフェースの変更
+
+本バージョンではアンダーライン(_)が XLPack 6.0 までの C/C++ 関数名の先頭に追加さ
+れています
+
 ---
 (C) 2014-2023  K Technologies

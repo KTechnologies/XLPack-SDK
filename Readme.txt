@@ -72,11 +72,17 @@ conditions.
   - Julia 1.8.5
   - Free Pascal 3.2.2
 
-4. Documents
+5. Documents
 
 Online manuals are available at our web site(*).
 
 (*) https://www.ktech.biz
+
+
+6. Change of C interface
+
+In this version, an underscore (_) is added to the beginning of C/C++ function
+names in XLPack 6.0 and former.
 
 ---
 (C) 2014-2023  K Technologies
