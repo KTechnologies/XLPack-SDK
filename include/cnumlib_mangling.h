@@ -1,8 +1,8 @@
 /****************************************
  *                                      *
  *  XLPack Numerical Library            *
- *  Version 6.1 (December 1, 2022)      *
- *  (C) 2014-2022  K Technologies       *
+ *  Version 7.0 (January 31, 2023)      *
+ *  (C) 2014-2023  K Technologies       *
  *                                      *
  ****************************************/
 #pragma once
@@ -553,6 +553,14 @@
 #define chebu	_chebu
 #define chebs	_chebs
 
+#define gegenbauer	_gegenbauer
+#define gegenbauerd1	_gegenbauerd1
+#define gegenbauerd	_gegenbauerd
+#define jacobi	_jacobi
+#define jacobid1	_jacobid1
+#define jacobid2	_jacobid2
+#define jacobid	_jacobid
+
 #define li	_li
 #define ei	_ei
 #define e1	_e1
@@ -680,6 +688,7 @@
 #define hyp0f1	_hyp0f1
 #define hyp1f0	_hyp1f0
 #define hyp2f0	_hyp2f0
+#define hyppfq	_hyppfq
 
 #define jelli	_jelli
 #define jsn	_jsn
@@ -694,6 +703,18 @@
 #define jds	_jds
 #define jcs	_jcs
 #define jcd	_jcd
+#define jtheta1	_jtheta1
+#define jtheta1t	_jtheta1t
+#define jtheta2	_jtheta2
+#define jtheta2t	_jtheta2t
+#define jtheta3	_jtheta3
+#define jtheta3t	_jtheta3t
+#define jtheta3m1	_jtheta3m1
+#define jtheta3m1t	_jtheta3m1t
+#define jtheta4	_jtheta4
+#define jtheta4t	_jtheta4t
+#define jtheta4m1	_jtheta4m1
+#define jtheta4m1t	_jtheta4m1t
 
 #define celli1	_celli1
 #define celli2	_celli2
@@ -707,6 +728,7 @@
 #define rf	_rf
 #define rj	_rj
 #define jzeta	_jzeta
+#define hlambda	_hlambda
 
 #define dfzero	_dfzero
 #define dfzero_r	_dfzero_r
@@ -962,6 +984,39 @@
 #define rodas_r	_rodas_r
 #define seulex	_seulex
 #define seulex_r	_seulex_r
+
+#define derkfa	_derkfa
+#define derkfa_r	_derkfa_r
+#define dopri5a	_dopri5a
+#define dopri5a_r	_dopri5a_r
+#define dverka	_dverka
+#define dverka_r	_dverka_r
+#define dop853a	_dop853a
+#define dop853a_r	_dop853a_r
+#define odexa	_odexa
+#define odexa_r	_odexa_r
+#define doprina	_doprina
+#define doprina_r	_doprina_r
+#define dopn43	_dopn43
+#define dopn43_r	_dopn43_r
+#define dopn64	_dopn64
+#define dopn64_r	_dopn64_r
+#define dopn86	_dopn86
+#define dopn86_r	_dopn86_r
+#define dopn1210	_dopn1210
+#define dopn1210_r	_dopn1210_r
+#define odex2a	_odex2a
+#define odex2a_r	_odex2a_r
+#define retarda	_retarda
+#define retarda_r	_retarda_r
+#define ylaga	_ylaga
+
+#define radaua	_radaua
+#define radaua_r	_radaua_r
+#define rodasa	_rodasa
+#define rodasa_r	_rodasa_r
+#define seulexa	_seulexa
+#define seulexa_r	_seulexa_r
 
 #define init_zigexp	_init_zigexp
 #define init_zigexp_r	_init_zigexp_r

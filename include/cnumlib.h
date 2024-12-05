@@ -1,35 +1,13 @@
 /****************************************
  *                                      *
- *  C/C++ Numerical Library             *
- *  Version 6.1 (December 1, 2022)      *
- *  (C) 2014-2022  K Technologies       *
+ *  XLPack Numerical Library            *
+ *  Version 7.0 (January 31, 2023)      *
+ *  (C) 2014-2023  K Technologies       *
  *                                      *
  ****************************************/
 #pragma once
 
-#if defined(__cplusplus)
-
-#include <cstddef>
-#include <complex>
-#define doublecomplex	std::complex<double>
-#define floatcomplex	std::complex<float>
-
-#else
-
-#include <stddef.h>
-#include <complex.h>
-#if defined(__INTEL_LLVM_COMPILER) || (defined(__INTEL_COMPILER) && defined(__STDC_VERSION__)) || defined(__clang__) || defined(__GNUC__) || defined(__APPLE__)
-	#define doublecomplex	double _Complex
-	#define floatcomplex	float _Complex
-#elif !defined(__INTEL_COMPILER)	// Assume MSVC
-	#define doublecomplex	_Dcomplex
-	#define floatcomplex	_Fcomplex
-#else
-	typedef struct { double r, i; } doublecomplex;
-	typedef struct { float r, i; } floatcomplex;
-#endif
-
-#endif
+#include "cnumlib_complex.h"
 
 #if !defined(_CNUMLIB_NO_MANGLING)
 #include "cnumlib_mangling.h"
@@ -122,6 +100,13 @@ extern double _chebt(unsigned int n, double x);
 extern double _chebtd(unsigned int n, double x);
 extern double _chebu(unsigned int n, double x);
 extern double _chebs(double c[], size_t n, double x);
+extern double _gegenbauer(unsigned int n, double lambda, double x);
+extern double _gegenbauerd1(unsigned int n, double lambda, double x);
+extern double _gegenbauerd(unsigned int n, double lambda, double x, unsigned int k);
+extern double _jacobi(unsigned int n, double alpha, double beta, double x);
+extern double _jacobid1(unsigned int n, double alpha, double beta, double x);
+extern double _jacobid2(unsigned int n, double alpha, double beta, double x);
+extern double _jacobid(unsigned int n, double alpha, double beta, double x, unsigned int k);
 
 /*
  * C4. Special functions (Elementary transcendental functions)
@@ -333,6 +318,7 @@ extern double _hyp2f1(double a, double b, double c, double x);
 extern double _hyp0f1(double b, double z);
 extern double _hyp1f0(double a, double z);
 extern double _hyp2f0(double a1, double a2, double z);
+extern double _hyppfq(unsigned int p, unsigned int q, double a[], double b[], double z, double *abserr);
 
 /*
  * C13. Special functions (Jacobi elliptic functions)
@@ -350,6 +336,18 @@ extern double _jdc(double u, double k);
 extern double _jds(double u, double k);
 extern double _jcs(double u, double k);
 extern double _jcd(double u, double k);
+extern double _jtheta1(double x, double q);
+extern double _jtheta1t(double x, double tau);
+extern double _jtheta2(double x, double q);
+extern double _jtheta2t(double x, double tau);
+extern double _jtheta3(double x, double q);
+extern double _jtheta3t(double x, double tau);
+extern double _jtheta3m1(double x, double q);
+extern double _jtheta3m1t(double x, double tau);
+extern double _jtheta4(double x, double q);
+extern double _jtheta4t(double x, double tau);
+extern double _jtheta4m1(double x, double q);
+extern double _jtheta4m1t(double x, double tau);
 
 /*
  * C14. Special functions (Elliptic integrals)
@@ -366,6 +364,7 @@ extern double _rg(double x, double y, double z);
 extern double _rf(double x, double y, double z);
 extern double _rj(double x, double y, double z, double p);
 extern double _jzeta(double phi, double k);
+extern double _hlambda(double phi, double k);
 
 /*
  * C19. Special functions (other special functions)
@@ -1602,6 +1601,19 @@ extern double _contx2(int ii, double x, double _rcont[], int icont[]);
 extern void _retard(int n, void (*f)(int, double, double *, double *, double *, int *), double *t, double y[], double tout, double *rtol, double *atol, int itol, void (*solout)(int, double, double, double *, int, double *, int *, int *), int iout, double work[], int lwork, int iwork[], int _liwork, double _rcont[], int lrcont, int icont[], int licont, int *info);
 extern double _ylag(int ii, double x, double (*phi)(int, double), double _rcont[], int icont[]);
 
+extern void _derkfa(int n, void (*f)(int, double, double *, double *), double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+void _dopri5a(int n, void (*f)(int, double, double *, double *), double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+void _dop853a(int n, void (*f)(int, double, double *, double *), double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+extern void _dverka(int n, void (*f)(int, double, double *, double *), double *t, double y[], double tout, double tend, double tol, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+extern void _odexa(int n, void (*f)(int, double, double *, double *), double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+extern void _dopn43(int n, void (*f2)(int, double, double *, double *), double *t, double y[], double yp[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+extern void _dopn64(int n, void (*f2)(int, double, double *, double *), double *t, double y[], double yp[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+extern void _dopn86(int n, void (*f2)(int, double, double *, double *), double *t, double y[], double yp[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+extern void _dopn1210(int n, void (*f2)(int, double, double *, double *), double *t, double y[], double yp[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+extern void _odex2a(int n, void (*f2)(int, double, double *, double *), double *t, double y[], double yp[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+extern void _retarda(int n, void (*f)(int, double, double *, double *), double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+extern void _ylaga(int i, int n, double t,  double y[], void (*phi)(int, int, double, double *, int *), double work[], int iwork[], int *info);
+
 extern void _derkf_r(int n, double *t, double y[], double tout, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int _liwork, int *info, double *xx, double yy[], double yyp[], int *irev);
 extern void _dopri5_r(int n, double *t, double y[], double tout, double *rtol, double *atol, int itol, int iout, double work[], int lwork, int iwork[], int _liwork, double _rcont[], int lrcont, int icont[], int licont, int *info, double *tt, double yy[], double yyp[], int *irtrn, int *irev);
 extern void _dverk_r(int n, double *t, double y[], double tout, double tol, double c[], int lc, double work[], int lwork, int *info, double *tt, double yy[], double yyp[], int *irev);
@@ -1612,6 +1624,18 @@ extern void _doprin_r(int n, double *t, double y[], double yp[], double tout, do
 extern void _odex2_r(int n, double *t, double y[], double yp[], double tout, double *rtol, double *atol, int itol, int iout, double work[], int lwork, int iwork[], int _liwork, double _rcont[], int lrcont, int icont[], int licont, int *info, double *tt, double yy[], double yyp[], int *irtrn, int *irev);
 extern void _retard_r(int n, double *t, double y[], double tout, double *rtol, double *atol, int itol, int iout, double work[], int lwork, int iwork[], int _liwork, double _rcont[], int lrcont, int icont[], int licont, int *info, double *tt, double yy[], double yyp[], int *irtrn, int *irev);
 extern void _ylag_r(int ii, double x, double _rcont[], int icont[], double *yy, int *irev);
+
+extern void _derkfa_r(int n, double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yyp[], int *irev);
+void _dopri5a_r(int n, double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yyp[], int *irev);
+void _dop853a_r(int n, double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yyp[], int *irev);
+extern void _dverka_r(int n, double *t, double y[], double tout, double tend, double tol, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yyp[], int *irev);
+extern void _odexa_r(int n, double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yyp[], int *irev);
+extern void _dopn43_r(int n, double *t, double y[], double yp[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yypp[], int *irev);
+extern void _dopn64_r(int n, double *t, double y[], double yp[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yypp[], int *irev);
+extern void _dopn86_r(int n, double *t, double y[], double yp[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yypp[], int *irev);
+extern void _dopn1210_r(int n, double *t, double y[], double yp[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yypp[], int *irev);
+extern void _odex2a_r(int n, double *t, double y[], double yp[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yypp[], int *irev);
+extern void _retarda_r(int n, double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yyp[], int *irev);
 
 /*
  * I1a2. Stiff initial value problem for ordinary differential equations (ODEs)
@@ -1636,6 +1660,14 @@ extern void _radau_r(int n, double *t, double y[], double tout, double *rtol, do
 extern void _rodas_r(int n, int ifcn, double *t, double y[], double tout, double *rtol, double *atol, int itol, int ijac, int mljac, int mujac, int idfx, int imas, int mlmas, int mumas, int iout, double work[], int lwork, int iwork[], int _liwork, double cont[], int lcont, int *info, double *tt, double yy[], double yyp[], int ldyypd, double yypd[], int *irtrn, int *irev);
 extern void _seulex_r(int n, int ifcn, double *t, double y[], double tout, double *rtol, double *atol, int itol, int ijac, int mljac, int mujac, int imas, int mlmas, int mumas, int iout, double work[], int lwork, int iwork[], int _liwork, double _rcont[], int lrcont, int icont[], int licont, int *info, double *tt, double yy[], double yyp[], int ldyypd, double yypd[], int *irtrn, int *irev);
 extern void _dassl_r(int n, double *t, double y[], double yp[], double tout, int iopt[], double *rtol, double *atol, double work[], int lwork, int iwork[], int _liwork, int *info, double *tt, double yyp[], int ldyypd, double yypd[], double *cj, int *ires, int *irev);
+
+extern void _radaua(int n, void (*f)(int, double, double *, double *), double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, void (*fjac)(int, double, double *, int, double *), int ijac, int mljac, int mujac, void (*fmas)(int, int, double *), int imas, int mlmas, int mumas, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+extern void _rodasa(int n, void (*f)(int, double, double *, double *), int ifcn, double *t, double y[], double tout, double tend, double rtol[], double atol[], int itol, void (*fjac)(int, double, double *, int, double *), int ijac, int mljac, int mujac, void (*fdfx)(int, double, double *, double *), int idfx, void (*fmas)(int, int, double *), int imas, int mlmas, int mumas, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+extern void _seulexa(int n, void (*f)(int, double, double *, double *), int ifcn, double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, void (*fjac)(int, double, double *, int, double *), int ijac, int mljac, int mujac, void (*fmas)(int, int, double *), int imas, int mlmas, int mumas, int mode, double work[], int lwork, int iwork[], int liwork, int *info);
+
+extern void _radaua_r(int n, double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int ijac, int mljac, int mujac, int imas, int mlmas, int mumas, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yyp[], int ldyypd, double yypd[], int *irev);
+extern void _rodasa_r(int n, int ifcn, double *t, double y[], double tout, double tend, double rtol[], double atol[], int itol, int ijac, int mljac, int mujac, int idfx, int imas, int mlmas, int mumas, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yyp[], int ldyypd, double yypd[], int *irev);
+extern void _seulexa_r(int n, int ifcn, double *t, double y[], double tout, double tend, double *rtol, double *atol, int itol, int ijac, int mljac, int mujac, int imas, int mlmas, int mumas, int mode, double work[], int lwork, int iwork[], int liwork, int *info, double *tt, double yy[], double yyp[], int ldyypd, double yypd[], int *irev);
 
 /*
  * J1a1. One-dimensional real fast Fourier transforms

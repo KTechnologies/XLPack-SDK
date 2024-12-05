@@ -1,4 +1,4 @@
-XLPack SDK (XLPack 6.1用) (2023.2.7)
+XLPack SDK (XLPack 7.0用) (2024.9.5)
 
 1. XLPack SDKとは
 
@@ -25,48 +25,46 @@ XLPackが使用している数値計算関数モジュールを, C/C++などExcel VBA以外の開発環境か
 
 3. 本ソフトウェアの構成
 
-ZIPファイルには次のファイルが含まれています.
+SDKには次のファイルが含まれています.
 
 Readme_ja.txt - 説明ファイル (本ファイル)
 Readme.txt - 説明ファイル (英文)
 include\
-  cnumlib.h - Cインターフェース・ヘッダーファイル (C言語)
-  cnumlib - Cインターフェース・ヘッダーファイル (C++)
-  cnumlib_mangling.h - Cインターフェース 旧(V6.0)ルーチン名定義
-  cblas.h - CBLASヘッダーファイル
-  lapacke.h - LAPACKEヘッダーファイル
+  cnumlib.h - Cインターフェース・ヘッダー
+  cnumlib_mangling.h - Cインターフェース・互換性ヘッダー (6項参照)
+  cnumlib_complex.h - Cインターフェース・ヘッダー (複素数型定義)
+  cblas.h - CBLASヘッダー
+  lapacke.h - LAPACKEヘッダー
+  spcnumlib.h - Cインターフェース・ヘッダー (疎行列)
+  spcnumlib_mangling.h - Cインターフェース・互換性ヘッダー
+  pdecnumlib.h - Cインターフェース・ヘッダー (偏微分方程式)
+  pdecnumlib_mangling.h - Cインターフェース・互換性ヘッダー
 lib\
   XLPack.lib - Cインターフェース・ライブラリ (64ビット版)
   XLPack_32.lib - Cインターフェース・ライブラリ (32ビット版)
   Lapacke.lib - LAPACKE/CBLASライブラリ (64ビット版)
   Lapacke_32.lib - LAPACKE/CBLASライブラリ (32ビット版)
 samples\
-  使用例: txtファイルは簡単にコマンドラインで実行した出力例です.
+  使用例: txtファイルはコマンドラインで実行した出力例です.
     C_C++ - C/C++による使用例
       testcpp_Matrixは「ストラウストラップのプログラミング入門」2011, 翔泳社 に
       出てくるMatrix.hおよびMatrixIO.hを別途用意する必要があります.
     Python - Pythonによる使用例
       numpyがインストールされている必要があります.
-      pydファイルはWindows用のバイナリファイルで Python 3.7 以降用です. ただし,
-      下記動作環境と異なる場合には動作しないかもしれません. その場合には
-      XLPack.py(同等の動作をするctypes版)を試してください.
+      pydファイルはWindows用の64ビットバイナリファイルで Python 3.7 以降で使用
+      できます. 32ビットPythonの場合, あるいはうまく動作しない場合には
+      XLPack.py(同等の動作をするctypes版)を使用してください.
     C# - C#による使用例
-    VB - VB.NETによる使用例
-    F# - F#による使用例
-    Julia - Juliaによる使用例
-    Pascal - Pascalによる使用例
 
 4. 動作環境
 
 下記ソフトウェアを使用して確認を行っています. インストール状態によっては使用例そ
 のままでは動作せず修正が必要な場合があります.
 
-・XLPack 6.1.0
-・Windows 10, 11 (22H2)
-  ・Visual Studio 2022 (17.4.4)
-  ・Python 3.11.1 (numpy 1.24.2), 3.10.9 (numpy 1.24.2)
-  ・Julia 1.8.5
-  ・Free Pascal 3.2.2
+・XLPack 7.0.0
+・Windows 11 (23H2)
+  ・Visual Studio 2022 (17.11.0)
+  ・Python 3.12.5 (numpy 2.0.1)
 
 5. ドキュメント
 
@@ -76,8 +74,8 @@ samples\
 
 6. Cインターフェースの変更
 
-本バージョンではアンダーライン(_)が XLPack 6.0 までの C/C++ 関数名の先頭に追加さ
-れています
+本バージョンでは XLPack 6.0 までの C/C++ 関数名の先頭にアンダーライン(_)が追加さ
+れています. cnumlib_mangling.h ヘッダーにより互換性のある関数名が定義されます.
 
 ---
-(C) 2014-2023  K Technologies
+(C) 2014-2024  K Technologies
