@@ -1,23 +1,27 @@
 /*****************************************
  *                                       *
  *  Experimental C# interface to XLPack  *
- *  Version 6.1 (December 1, 2022)       *
- *  (C) 2014-2022  K Technologies        *
+ *  Version 7.0 (January 31, 2023)       *
+ *  (C) 2014-2023  K Technologies        *
  *                                       *
  *****************************************/
 
 using static System.Math;
 using System.Runtime.InteropServices;
 
+using System.Text;
+
 public static class XLPack
 {
 
-#if macOS
-	const string DLL = "/Library/Application Support/Microsoft/Office365/User Content.localized/Add-Ins.localized/XLPack.dylib";
-#elif Win64
-	const string DLL = "XLPack.dll";
-#else // Win32
+#if Win32
 	const string DLL = "XLPack_32.dll";
+	const string DLLSP = "XLPackSp_32.dll";
+	const string DLLPDE = "XLPackPde_32.dll";
+#else
+	const string DLL = "XLPack.dll";
+	const string DLLSP = "XLPackSp.dll";
+	const string DLLPDE = "XLPackPde.dll";
 #endif
 
 [DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_d1num")]
@@ -444,12 +448,12 @@ public static void qagi(QagiFunc f, double bound, int inf, out double result, ou
 	} while (irev != 0);
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_derkf_r")]
-private extern static void _derkf_r(int n, ref double t, double[] y, double tout, ref double rtol, ref double atol, int itol, int mode, double[] work, int lwork, int[] iwork, int liwork, out int info, out double tt, double[] yy, double[] yyp, out int irev);
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_derkfa_r")]
+private extern static void _derkfa_r(int n, ref double t, double[] y, double tout, double tend, ref double rtol, ref double atol, int itol, int mode, double[] work, int lwork, int[] iwork, int liwork, out int info, out double tt, double[] yy, double[] yyp, out int irev);
 
-public delegate void DerkfProc(int n, double t, double[] y, double[] yp);
+public delegate void DerkfaProc(int n, double t, double[] y, double[] yp);
 
-public static void derkf(int n, DerkfProc fcn, ref double t, double[] y, double tout, double[] work, int[] iwork, out int info, double rtol = 1.0e-10, double atol = 0.0, int mode = 0)
+public static void derkfa(int n, DerkfaProc fcn, ref double t, double[] y, double tout, double tend, int mode, double[] work, int[] iwork, out int info, double rtol = 1.0e-10, double atol = 0.0)
 {
 	const int itol = 0;
 	int lwork = work.Length;
@@ -466,28 +470,58 @@ public static void derkf(int n, DerkfProc fcn, ref double t, double[] y, double 
 	yyp = new double[n];
 	irev = 0;
 	do {
-		_derkf_r(n, ref t, y, tout, ref rtol, ref atol, itol, mode, work, lwork, iwork, liwork, out info, out tt, yy, yyp, out irev);
-		if (irev >= 1 && irev <= 11)
+		_derkfa_r(n, ref t, y, tout, tend, ref rtol, ref atol, itol, mode, work, lwork, iwork, liwork, out info, out tt, yy, yyp, out irev);
+		if (irev != 0)
 			fcn(n, tt, yy, yyp);
 	} while (irev != 0);
-	if (info == -2 || info == -4)
+	if (info == -2 || info == -5)
 		info = info - 1;
-	else if (info == -5 || info == -6)
+	else if (info == -6 || info == -7)
 		info = info - 4;
-	else if (info == -10)
-		info = -6;
-	else if (info < 0)
-		info = info + 5;
+	else if (info == -9)
+		info = -12;
+	else if (info == -11)
+		info = -7;
+	else if (info == -13)
+		info = -8;
 }
 
-[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_derkf_int")]
-private extern static void _derkf_int(int n, double t, double[] y, double[] work);
+[DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dopn43_r")]
+private extern static void _dopn43_r(int n, ref double t, double[] y, double[] yp, double tout, double tend, ref double rtol, ref double atol, int itol, int mode, double[] work, int lwork, int[] iwork, int liwork, out int info, out double tt, double[] yy, double[] yypp, out int irev);
 
-public static void derkf_int(int n, double t, double[] y, double[] work)
+public delegate void Dopn43Proc(int n, double t, double[] y, double[] ypp);
+
+public static void dopn43(int n, Dopn43Proc fcn, ref double t, double[] y, double[] yp, double tout, double tend, int mode, double[] work, int[] iwork, out int info, double rtol = 1.0e-10, double atol = 0.0)
 {
-	if (n < 1 || y.Length < n || work.Length < 9*n + 20)
+	const int itol = 0;
+	int lwork = work.Length;
+	int liwork = iwork.Length;
+	double tt;
+	double[] yy, yypp;
+	int irev;
+
+	if (n < 1) {
+		info = -1;
 		return;
-	_derkf_int(n, t, y, work);
+	}
+	yy = new double[n];
+	yypp = new double[n];
+	irev = 0;
+	do {
+		_dopn43_r(n, ref t, y, yp, tout, tend, ref rtol, ref atol, itol, mode, work, lwork, iwork, liwork, out info, out tt, yy, yypp, out irev);
+		if (irev >= 1 && irev <= 2)
+			fcn(n, tt, yy, yypp);
+	} while (irev != 0);
+	if (info == -2 || info == -6)
+		info = info - 1;
+	else if (info == -7 || info == -8)
+		info = info - 4;
+	else if (info == -10)
+		info = -13;
+	else if (info == -12)
+		info = -8;
+	else if (info == -14)
+		info = -9;
 }
 
 [DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_rfft1f")]
@@ -593,5 +627,112 @@ public extern static double genrand_res53();
 
 [DllImport(DLL, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dlamch")]
 public extern static double dlamch(char cmach);
+
+//---
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_csr_dusmv")]
+public extern static void csr_dusmv(char trans, int m, int n, double alpha, double[] val, int[] rowptr, int[] colind, int ibase, double[] x, int incx, double beta, double[] y, int incy, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_csr_dussv")]
+public extern static void csr_dussv(char uplo, char trans, char diag, int n, double[] val, int[] rowptr, int[] colind, int ibase, double[] x, int incx, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_csr_dusmm")]
+public extern static void csr_dusmm(char trans, char order, int m, int n, int nrhs, double alpha, double[] val, int[] rowptr, int[] colind, int ibase, int ldb, double[] b, double beta, int ldc, double[] c, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_csr_dussm")]
+public extern static void csr_dussm(char uplo, char trans, char diag, char order, int n, int nrhs, double[] val, int[] rowptr, int[] colind, int ibase, int idx, double[] x, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_ssr_dusmv")]
+public extern static void ssr_dusmv(char uplo, int n, double alpha, double[] val, int[] rowptr, int[] colind, int ibase, double[] x, int incx, double beta, double[] y, int incy, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_csc_csr")]
+public extern static void csc_csr(int m, int n, double[] val, int[] ptr, int[] ind, int ibase, double[] val2, int[] ptr2, int[] ind2, int ibase2, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_coo_csr")]
+public extern static void coo_csr(int m, int n, int nnz, double[] val, int[] rowind, int[] colind, int ibase, double[] val2, int[] rowptr2, int[] colind2, int ibase2, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_csr_coo")]
+public extern static void csr_coo(int m, int n, double[] val, int[] rowptr, int[] colind, int ibase, double[] val2, int[] rowind2, int[] colind2, int ibase2, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_csr_ssr")]
+public extern static void csr_ssr(char uplo, int n, double[] val, int[] rowptr, int[] colind, int ibase, int maxnnz2, double[] val2, int[] rowptr2, int[] colind2, int ibase2, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_ssr_csr")]
+public extern static void ssr_csr(char uplo, int n, double[] val, int[] rowptr, int[] colind, int ibase, int maxnnz2, double[] val2, int[] rowptr2, int[] colind2, int ibase2, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_dense_csr")]
+public extern static void dense_csr(int m, int n, int lda, double[] a, int maxnnz, double[] val, int[] rowptr, int[] colind, int ibase, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_csr_dense")]
+public extern static void csr_dense(int m, int n, double[] val, int[] rowptr, int[] colind, int ibase, int lda, double[] a, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_bicg1")]
+public extern static void _bicg1(int n, double[] val, int[] rowptr, int[] colind, double[] b, double[] x, double tol, int maxiter, out int iter, out double res, int lwork, double[] work, out int info);
+
+public static void bicg1(int n, double[] val, int[] rowptr, int[] colind, double[] b, double[] x, double tol, int maxiter, out int iter, out double res, out int info)
+{
+	int lwork = 8*n;
+	double[] work;
+	work = new double[lwork];
+	_bicg1(n, val, rowptr, colind, b, x, tol, maxiter, out iter, out res, lwork, work, out info);
+}
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_cg1")]
+public extern static void _cg1(char uplo, int n, double[] val, int[] rowptr, int[] colind, double[] b, double[] x, double tol, int maxiter, out int iter, out double res, int lwork, double[] work, out int info);
+
+public static void cg1(char uplo, int n, double[] val, int[] rowptr, int[] colind, double[] b, double[] x, double tol, int maxiter, out int iter, out double res, out int info)
+{
+	int lwork = 5*n;
+	double[] work;
+	work = new double[lwork];
+	_cg1(uplo, n, val, rowptr, colind, b, x, tol, maxiter, out iter, out res, lwork, work, out info);
+}
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_mm_read")]
+public extern static void _mm_read(string fname, byte[] matcode, out int nrow, out int ncol, out int nnz, double[] val, int lval, int[] rowind, int lrowind, int[] colind, int lcolind, int skip, int ibase, int format, int sort, out int info);
+
+public static void mm_read(string fname, out string matcode, out int nrow, out int ncol, out int nnz, double[] val, int lval, int[] ptr, int lptr, int[] ind, int lind, int skip, int ibase, int format, int sort, out int info)
+{
+	var encoding = Encoding.GetEncoding("UTF-8");
+	byte[] bmatcode = new byte[4];
+	_mm_read(fname, bmatcode, out nrow, out ncol, out nnz, val, lval, ptr, lptr, ind, lind, skip, ibase, format, sort, out info);
+	matcode = encoding.GetString(bmatcode);
+}
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_mm_write")]
+public extern static void _mm_write(string fname, char[] matcode, int nrow, int ncol, int nnz, double[] val, int lval, int[] ptr, int lptr, int[] ind, int lind, int ibase, int fchk, int format, out int info);
+
+public static void mm_write(string fname, string matcode, int nrow, int ncol, int nnz, double[] val, int lval, int[] ptr, int lptr, int[] ind, int lind, int ibase, int fchk, int format, out int info)
+{
+	_mm_write(fname, matcode.ToCharArray(), nrow, ncol, nnz, val, lval, ptr, lptr, ind, lind, ibase, fchk, format, out info);
+}
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_csr_check")]
+public extern static void csr_check(int m, int n, double[] val, int[] rowptr, int[] colind, int[] result, out int info);
+
+[DllImport(DLLSP, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_csx_check_sym")]
+public extern static void csx_check_sym(int n, double[] val, int[] rowptr, int[] colind, out int info);
+
+[DllImport(DLLPDE, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_fem2p")]
+public extern static void _fem2p(int n, int ne, double[] x, double[] y, int ldknc, int[] knc, double[] p, double[] q, double[] f, int nb1, int[] ib, double[] bv, int nb2, int ldks2, int[] ks2, int ldalpha, double[] alpha, int ldbeta, double[] beta, int mxnnz, double[] a, int[] ia, int[] ja, int index, double[] b, int[] iwork, out int info);
+
+public static void fem2p(int n, int ne, double[] x, double[] y, int ldknc, int[] knc, double[] p, double[] q, double[] f, int nb1, int[] ib, double[] bv, int nb2, int ldks2, int[] ks2, int ldalpha, double[] alpha, int ldbeta, double[] beta, int mxnnz, double[] a, int[] ia, int[] ja, int index, double[] b, out int info)
+{
+	int[] iwork;
+	iwork = new int[2*n];
+	_fem2p(n, ne, x, y, ldknc, knc, p, q, f, nb1, ib, bv, nb2, ldks2, ks2, ldalpha, alpha, ldbeta, beta, mxnnz, a, ia, ja, index, b, iwork, out info);
+}
+
+[DllImport(DLLPDE, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_mesh23")]
+public extern static void mesh23(int nx, int ny, out int n, double sclx, double scly, double[] x, double[] y, out int ne, int ldknc, int[] knc, int ldks, int[] ks, int[] lb, out int nb, out int info);
+
+[DllImport(DLLPDE, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_readgmsh22")]
+public extern static void readgmsh22(string fname, out int n, double[] x, double[] y, double[] z, out int ne, int ldkc, int[] kc, int ldlb, int[] lb, out int info);
+
+[DllImport(DLLPDE, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_writegmsh22")]
+public extern static void writegmsh22(string fname, int n, double[] x, double[] y, double[] z, int ne, int ldkc, int[] kc, int ldlb, int[] lb, out int info);
+
+[DllImport(DLLPDE, CallingConvention = CallingConvention.Cdecl, EntryPoint = "_writevtkug")]
+public extern static void writevtkug(string fname, int n, double[] x, double[] y, double[] z, int ne, int ldkc, int[] kc, double[] u, out int info);
 
 }

@@ -1,14 +1,11 @@
-# *********************************************
-# *                                           *
-# *  Experimental Python interface to XLPack  *
-# *  Test program                             *
-# *  Version 6.0 (June 14, 2022)              *
-# *  (C) 2014-2022  K Technologies            *
-# *                                           *
-# *********************************************
+# ****************************************
+# *                                      *
+# *  XLPack Numerical Library            *
+# *  Version 7.0 (January 31, 2023)      *
+# *  (C) 2014-2023  K Technologies       *
+# *                                      *
+# ****************************************
 
-import numpy as np
-from math import *
 import platform
 version = platform.python_version_tuple()
 if platform.system() == 'Windows' and int(version[0]) >= 3 and int(version[1]) >= 8:
@@ -17,10 +14,10 @@ if platform.system() == 'Windows' and int(version[0]) >= 3 and int(version[1]) >
     # Set XLPack.dll install directory
     os.add_dll_directory(os.path.expanduser('~/AppData/Local/Programs/XLPack'))
 import struct
-if struct.calcsize('P') == 8:
-    from XLPack import *
-else:
-    from XLPack_32 import *
+
+import numpy as np
+from math import *
+from XLPack import *
 
 def bj0(x):
     # besj0 by Chebyshev series approximation (0 <= x <= 4)
@@ -120,7 +117,7 @@ def TestDgesv():
         [-0.11, 0.81, -0.92],
         [-0.93, 0.37, -0.29]])
     b = np.array([-0.3727, 0.4319, -1.4247])
-    ipiv = np.empty(n, dtype=int)
+    ipiv = np.empty(n, dtype=np.int32)
     anorm, info = dlange('1', n, n, a)
     info = dgesv(n, a, ipiv, b)
     print(b, info)
@@ -229,17 +226,16 @@ def TestDfzero():
 
 def FHybrd1(n, x, fvec, iflag):
     if iflag == 1 or iflag == 2:
-        fvec[0] = x[0]**2 - x[1] - 1
-        fvec[1] = (x[0] - 2)**2 + (x[1] - 0.5)**2 - 1
+        fvec[0] = 4*x[0]**2 + x[1]**2 - 16
+        fvec[1] = x[0]**2 + x[1]**2 - 9
 
 def TestHybrd1():
     print ('** hybrd1 **')
     n = 2
-    x = np.array([0.0, 0.0])
+    x = np.array([1.0, 2.0])
     fvec = np.empty(n)
     info = hybrd1(FHybrd1, n, x, fvec)
     print(x)
-    print(fvec)
     print(info)
 
 def FDfmin(x):
@@ -304,52 +300,60 @@ def TestQagi():
     print('qagi [-inf, 0]')
     print(s, abserr, info)
 
-def FDerkf(n, t, y, yp):
-    yp[0] = -2*y[0] + y[1] - cos(t)
-    yp[1] = 2*y[0] - 3*y[1] + 3*cos(t) - sin(t)
+def FDerkfa(n, t, y, yp):
+    alfa = pi/4
+    r = (y[0]**2 + y[1]**2)**(3/2)/alfa**2
+    yp[0] = y[2]
+    yp[1] = y[3]
+    yp[2] = -y[0]/r
+    yp[3] = -y[1]/r
 
-def TestDerkf():
-    print ('** Derkf **')
-    n = 2
-    wsave = np.empty(7*n + 20)
-    iwsave = np.empty(20, dtype=int)
-    t = 0
-    y = np.array([1.0, 2.0])
-    tfinal = 10.0
-    tprint = 1.0
+def TestDerkfa():
+    print ('** Derkfa **')
+    n = 4
+    wsave = np.empty(9*n + 40)
+    iwsave = np.empty(40, dtype=int)
+    alfa = pi/4
+    ecc = 0.25
+    t = 0.0
+    y = np.array([1 - ecc, 0, 0, alfa*sqrt((1 + ecc)/(1 - ecc))])
+    tend = 12.0
     info = 0
     while True:
-        tout = t + tprint
-        t, info = derkf(info, n, FDerkf, t, y, tout, wsave, iwsave)
+        tout = t + 1
+        t, info = derkfa(info, n, FDerkfa, t, y, tout, tend, wsave, iwsave)
         print(t, y)
-        if t >= tfinal or info != 1:
+        if t >= tend or info < 0 or info > 10:
             break
-    if info != 1:
+    if info != 0:
         print('Error: info =', info)
 
-def TestDerkf_2():
-    print ('** Derkf (2) (dense output) **')
+def FDopn43(n, t, y, ypp):
+    alfa = pi/4
+    r = (y[0]**2 + y[1]**2)**(3/2)/alfa**2
+    ypp[0] = -y[0]/r
+    ypp[1] = -y[1]/r
+
+def TestDopn43():
+    print ('** Dopn43 **')
     n = 2
-    wsave = np.empty(9*n + 20)
-    iwsave = np.empty(20, dtype=int)
-    y_temp = np.empty(n)
-    t = 0
-    y = np.array([1.0, 2.0])
-    tfinal = 10.0
-    tprint = 1.0
-    tout = tprint
+    wsave = np.empty(8*n + 40)
+    iwsave = np.empty(30, dtype=int)
+    alfa = pi/4
+    ecc = 0.25
+    t = 0.0
+    y = np.array([1 - ecc, 0])
+    yp = np.array([0, alfa*sqrt((1 + ecc)/(1 - ecc))])
+    tend = 12.0
     info = 0
     while True:
-        t, info = derkf(info, n, FDerkf, t, y, tfinal, wsave, iwsave, mode = 2)
-        if info != 1 and info != 2:
-            print('Error: info =', info)
+        tout = t + 1
+        t, info = dopn43(info, n, FDopn43, t, y, yp, tout, tend, wsave, iwsave)
+        print(t, y, yp)
+        if t >= tend or info < 0 or info > 10:
             break
-        while t >= tout:
-            derkf_int(n, tout, y_temp, wsave)
-            print(tout, y_temp)
-            tout = tout + tprint
-        if t >= tfinal:
-            break
+    if info != 0:
+        print('Error: info =', info)
 
 def TestRfft1():
     # Initialization
@@ -460,8 +464,8 @@ TestOptif0()
 TestQk15()
 TestQag()
 TestQagi()
-TestDerkf()
-TestDerkf_2()
+TestDerkfa()
+TestDopn43()
 TestRfft1()
 TestLmdif1()
 TestGenrandInt31()

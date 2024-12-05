@@ -2,21 +2,21 @@
  *                                      *
  *  C/C++ interface to XLPack           *
  *  Test program                        *
- *  Version 6.0 (June 14, 2022)         *
- *  (C) 2014-2022  K Technologies       *
+ *  Version 7.0 (January 31, 2023)      *
+ *  (C) 2014-2023  K Technologies       *
  *                                      *
  ****************************************/
 
 #include <cmath>
 #include <iostream>
 
-#include "cnumlib"
+#include "cnumlib.h"
+#include "Matrix.h"
 #include "MatrixIO.h"
 
-// For Matrix.h and MatrixIO.h, refer to the following book:
-//   Stroustrup "Programming -- Principles and Practice Using C++, 1st Ed." Addison-Wesley, 2009
-//   Japanese languagr edition published by Sgoeisha Company Ltd. 2011 (ストラウストラップのプログラミング入門)
-// Matrix.h and MatrixIO.h can be downloaded from http://www.stroustrup.com/Programming/
+// Refer to the following book for Matrix.h and MatrixIO.h:
+//   Bjarne Stroustrup "Programming -- Principles and Practice Using C++, 2nd Ed." Addison-Wesley, 2014.
+// Matrix.h and MatrixIO.h can be downloaded from the author's homepage https://www.stroustrup.com
 
 using namespace std;
 using namespace Numeric_lib;
@@ -27,7 +27,7 @@ void Dgesv(int n, Matrix<double,2>& a, Matrix<double>& b, int& info)
 {
 	int *ipiv = new int[n];
 	int lda = a.dim2(), nrhs = 1, ldb = n;
-	dgesv(n, nrhs, lda, a.data(), ipiv, ldb, b.data(), info);
+	dgesv(n, nrhs, lda, a.data(), ipiv, ldb, b.data(), &info);
 	delete[] ipiv;
 }
 
@@ -45,7 +45,7 @@ void Dgecon(char norm, int n, Matrix<double,2>& a, double anorm, double& rcond, 
 	double *work = new double[4*n];
 	int *iwork = new int[n];
 	int lda = a.dim2();
-	dgecon(norm, n, lda, a.data(), anorm, rcond, work, iwork, info);
+	dgecon(norm, n, lda, a.data(), anorm, &rcond, work, iwork, &info);
 	delete[] work;
 	delete[] iwork;
 }
@@ -53,7 +53,7 @@ void Dgecon(char norm, int n, Matrix<double,2>& a, double anorm, double& rcond, 
 void Dposv(char uplo, int n, Matrix<double,2>& a, Matrix<double>& b, int& info)
 {
 	int lda = a.dim2(), nrhs = 1, ldb = n;
-	dposv(uplo, n, nrhs, lda, a.data(), ldb, b.data(), info);
+	dposv(uplo, n, nrhs, lda, a.data(), ldb, b.data(), &info);
 }
 
 double Dlansy(char norm, char uplo, int n, Matrix<double,2>& a)
@@ -70,7 +70,7 @@ void Dpocon(char uplo, int n, Matrix<double,2>& a, double anorm, double& rcond, 
 	double *work = new double[3*n];
 	int *iwork = new int[n];
 	int lda = a.dim2();
-	dpocon(uplo, n, lda, a.data(), anorm, rcond, work, iwork, info);
+	dpocon(uplo, n, lda, a.data(), anorm, &rcond, work, iwork, &info);
 	delete[] work;
 	delete[] iwork;
 }
@@ -80,12 +80,12 @@ void Dsyev(char jobz, char uplo, int n, Matrix<double,2>& a, Matrix<double>& w, 
 	int lwork = -1;
 	double *work = new double[1];
 	int lda = a.dim2();
-	dsyev(jobz, uplo, n, lda, a.data(), w.data(), work, lwork, info);
+	dsyev(jobz, uplo, n, lda, a.data(), w.data(), work, lwork, &info);
 	if (info == 0) {
 		lwork = (int)work[0];
 		delete[] work;
 		work = new double[lwork];
-		dsyev(jobz, uplo, n, lda, a.data(), w.data(), work, lwork, info);
+		dsyev(jobz, uplo, n, lda, a.data(), w.data(), work, lwork, &info);
 	}
 	delete[] work;
 }
@@ -95,12 +95,12 @@ void Dgels(char trans, int m, int n, Matrix<double,2>& a, Matrix<double>& b, int
 	int lwork = -1;
 	double *work = new double[1];
 	int lda = a.dim2(), nrhs = 1, ldb = m;
-	dgels(trans, m, n, nrhs, lda, a.data(), ldb, b.data(), work, lwork, info);
+	dgels(trans, m, n, nrhs, lda, a.data(), ldb, b.data(), work, lwork, &info);
 	if (info == 0) {
 		lwork = (int)work[0];
 		delete[] work;
 		work = new double[lwork];
-		dgels(trans, m, n, nrhs, lda, a.data(), ldb, b.data(), work, lwork, info);
+		dgels(trans, m, n, nrhs, lda, a.data(), ldb, b.data(), work, lwork, &info);
 	}
 	delete[] work;
 }
@@ -108,7 +108,7 @@ void Dgels(char trans, int m, int n, Matrix<double,2>& a, Matrix<double>& b, int
 void Dgecov(int job, int n, Matrix<double,2>& a, Matrix<double>& ci, int& info)
 {
 	int lda = a.dim2();
-	dgecov(job, n, lda, a.data(), ci.data(), info);
+	dgecov(job, n, lda, a.data(), ci.data(), &info);
 }
 
 // Test programs

@@ -2,8 +2,8 @@
  *                                      *
  *  C/C++ interface to XLPack           *
  *  Test program                        *
- *  Version 6.0 (June 14, 2022)         *
- *  (C) 2014-2022  K Technologies       *
+ *  Version 7.0 (January 31, 2023)      *
+ *  (C) 2014-2023  K Technologies       *
  *                                      *
  ****************************************/
 
@@ -13,7 +13,7 @@
 #include <cerrno>
 using namespace std;
 
-#include "cnumlib"
+#include "cnumlib.h"
 #include "lapacke.h"
 
 void test_sf()
@@ -142,13 +142,13 @@ void test_sf()
 	x = 0.5;
 	errno = 0;
 	y = celli1(x);
-	cout << "x = " << x << ", y = " << y << ", errno = " << errno << endl;
+	cout << "k = " << x << ", y = " << y << ", errno = " << errno << endl;
 
 	cout << "** celli2\n";
 	x = 0.5;
 	errno = 0;
 	y = celli2(x);
-	cout << "x = " << x << ", y = " << y << ", errno = " << errno << endl;
+	cout << "k = " << x << ", y = " << y << ", errno = " << errno << endl;
 
 	cout << "** celli3\n";
 	x = 0.7; x2 = 0.5;
@@ -255,7 +255,7 @@ void test_dgels()
 	cout << "a0 = " << y[0] << ", a1 = " << y[1] << endl;
 	cout << "info = " << info << endl;
 	if (info == 0) {
-		dgecov(0, n, lda, (double *)a, ci, info);
+		dgecov(0, n, lda, (double *)a, ci, &info);
 		s = 0.0;
 		for (int i = n; i < m; i++)
 			s = s + y[i]*y[i];
@@ -274,12 +274,12 @@ void test_pchse()
 	int incfd, skip, lwork = 2*n, info;
 
 	incfd = 1; skip = 0;
-	pchse(n, x, y, d, incfd, work, lwork, info);
+	pchse(n, x, y, d, incfd, work, lwork, &info);
 	cout << "** pchse\n";
 	cout << "info = " << info << endl;
 	if (info == 0) {
 		xe[0] = 0.115; xe[1] = 0.125;
-		pchfe(n, x, y, d, incfd, skip, ne, xe, ye, info);
+		pchfe(n, x, y, d, incfd, skip, ne, xe, ye, &info);
 		cout << "ln(" << xe[0] << ") = " << ye[0] << endl;
 		cout << "ln(" << xe[1] << ") = " << ye[1] << endl;
 		cout << "info = " << info << endl;
@@ -296,12 +296,12 @@ void test_pchia()
 	int incfd, skip, lwork = 2*n, info;
 
 	incfd = 1; skip = 0;
-	pchse(n, x, y, d, incfd, work, lwork, info);
+	pchse(n, x, y, d, incfd, work, lwork, &info);
 	cout << "** pchse\n";
 	cout << "info = " << info << endl;
 	if (info == 0) {
 		a = 0; b = 4;
-		s = pchia(n, x, y, d, incfd, skip, a, b, info);
+		s = pchia(n, x, y, d, incfd, skip, a, b, &info);
 		cout << "** pchia\n";
 		cout << "S = " << s << ", S(true) = " << atan(4.0) << endl;
 		cout << "info = " << info << endl;
@@ -317,7 +317,7 @@ void test_rpzero2()
 
 	iflag = 0;
 	maxiter = 100;
-	rpzero2(n, a, zr, zi, iflag, maxiter, iter, s, work, info);
+	rpzero2(n, a, zr, zi, iflag, maxiter, &iter, s, work, &info);
 	cout << "** rpzero2\n";
 	for (int i = 0; i < n; i++)
 		cout << zr[i] << "  " << zi[i] << "  " << s[i] << endl;
@@ -336,7 +336,7 @@ void test_dfzero()
 
 	b = 1.0; c = 3.0; r = b;
 	re = 0.0; ae = 0.0;
-	dfzero(f_dfzero, b, c, r, re, ae, info);
+	dfzero(f_dfzero, &b, &c, r, re, ae, &info);
 	cout << "** dfzero\n";
 	cout << "x = " << b << ", info = " << info << endl;
 }
@@ -351,7 +351,7 @@ void test_dfzero_r()
 	re = 0.0; ae = 0.0;
 	irev = 0;
 	do {
-		dfzero_r(b, c, r, re, ae, info, xx, yy, irev);
+		dfzero_r(&b, &c, r, re, ae, &info, &xx, yy, &irev);
 		if (irev != 0)
 			yy = f_dfzero(xx);
 	} while (irev != 0);
@@ -359,7 +359,7 @@ void test_dfzero_r()
 	cout << "x = " << b << ", info = " << info << endl;
 }
 
-void f_hybrd1(int n, double x[], double fvec[], int& iflag)
+void f_hybrd1(int n, double x[], double fvec[], int *iflag)
 {
 	fvec[0] = 4*x[0]*x[0] + x[1]*x[1] - 16;
 	fvec[1] = x[0]*x[0] + x[1]*x[1] - 9;
@@ -373,9 +373,9 @@ void test_hybrd1()
 	int info;
 
 	x[0] = 1; x[1] = 2;
-	hybrd1(f_hybrd1, n, x, fvec, xtol, work, lwork, info);
+	hybrd1(f_hybrd1, n, x, fvec, xtol, work, lwork, &info);
 	cout << "** hybrd1\n";
-	cout << "x[1] = " << x[0] << ", x[2] =" << x[1] << endl;
+	cout << "x[1] = " << x[0] << ", x[2] = " << x[1] << endl;
 	cout << "info = " << info << endl;
 }
 
@@ -391,14 +391,14 @@ void test_hybrd1_r()
 	x[0] = 1; x[1] = 2;
 	irev = 0;
 	do {
-		hybrd1_r(n, x, fvec, xtol, work, lwork, info, xx, yy, irev);
+		hybrd1_r(n, x, fvec, xtol, work, lwork, &info, xx, yy, &irev);
 		if (irev >= 1 && irev <= 4) {
 			iflag = 1;
-			f_hybrd1(n, xx, yy, iflag);
+			f_hybrd1(n, xx, yy, &iflag);
 		}
 	} while (irev != 0);
 	cout << "** hybrd1_r\n";
-	cout << "x[1] = " << x[0] << ", x[2] =" << x[1] << endl;
+	cout << "x[1] = " << x[0] << ", x[2] = " << x[1] << endl;
 	cout << "info = " << info << endl;
 }
 
@@ -428,7 +428,7 @@ void test_dfmin_r()
 	tol = 1.0e-8;
 	irev = 0;
 	do {
-		dfmin_r(a, b, tol, xx, yy, irev);
+		dfmin_r(a, b, tol, &xx, yy, &irev);
 		if (irev != 0)
 			yy = f_dfmin(xx);
 	} while (irev != 0);
@@ -436,10 +436,10 @@ void test_dfmin_r()
 	cout << "x = " << xx << endl;
 }
 
-void f_optif0(int n, double x[], double& fval)
+void f_optif0(int n, double x[], double *fval)
 {
 	// Rosenbrock function
-	fval = 100*(x[1] - x[0]*x[0])*(x[1] - x[0]*x[0]) + (1 - x[0])*(1 - x[0]);
+	*fval = 100*(x[1] - x[0]*x[0])*(x[1] - x[0]*x[0]) + (1 - x[0])*(1 - x[0]);
 }
 
 void test_optif0()
@@ -450,7 +450,7 @@ void test_optif0()
 	int info;
 
 	x[0] = -1.2; x[1] = 1.0;
-	optif0(n, x, f_optif0, xpls, fpls, work, lwork, info);
+	optif0(n, x, f_optif0, xpls, &fpls, work, lwork, &info);
 	cout << "** optif0\n";
 	cout << "xpls[1] = " << xpls[0] << ", xpls[2] = " << xpls[1] << endl;
 	cout << "fpls = " << fpls << endl;
@@ -469,9 +469,9 @@ void test_optif0_r()
 	x[0] = -1.2; x[1] = 1.0;
 	irev = 0;
 	do {
-		optif0_r(n, x, xpls, fpls, work, lwork, info, xx, yy, irev);
+		optif0_r(n, x, xpls, &fpls, work, lwork, &info, xx, yy, &irev);
 		if (irev >= 1 && irev <= 20)
-			f_optif0(n, xx, yy);
+			f_optif0(n, xx, &yy);
 	} while (irev != 0);
 	cout << "** optif0_r\n";
 	cout << "xpls[1] = " << xpls[0] << ", xpls[2] = " << xpls[1] << endl;
@@ -490,7 +490,7 @@ void test_qk15()
 
 	// int(1/(1+x**2)) [0, 4] = atan(4)
 	a = 0; b = 4;
-	qk15(f_qk15, a, b, result, abserr, resabs, resasc);
+	qk15(f_qk15, a, b, &result, &abserr, &resabs, &resasc);
 	cout << "** qk15\n";
 	cout << "result = " << result << ", abserr = " << abserr << endl;
 }
@@ -504,7 +504,7 @@ void test_qk15_r()
 	a = 0; b = 4;
 	irev = 0;
 	do {
-		qk15_r(a, b, result, abserr, resabs, resasc, xx, yy, irev);
+		qk15_r(a, b, &result, &abserr, &resabs, &resasc, &xx, yy, &irev);
 		if (irev != 0)
 			yy = f_qk15(xx);
 	} while (irev != 0);
@@ -528,7 +528,7 @@ void test_qag()
 	epsabs = 1.0e-10; epsrel = 1.0e-10;
 	for (int i = 1; i <= 6; i++) {
 		key = i;
-		qag(f_qag, a, b, epsabs, epsrel, key, limit, result, abserr, neval, last, work, lwork, iwork, info);
+		qag(f_qag, a, b, epsabs, epsrel, key, limit, &result, &abserr, &neval, &last, work, lwork, iwork, &info);
 		cout << "** qag (key = " << key << ")\n";
 		cout << "result = " << result << ", abserr = " << abserr << ", neval = " << neval << ", last = " << last << endl;
 	}
@@ -548,7 +548,7 @@ void test_qag_r()
 		key = i;
 		irev = 0;
 		do {
-			qag_r(a, b, epsabs, epsrel, key, limit, result, abserr, neval, last, work, lwork, iwork, info, xx, yy, irev);
+			qag_r(a, b, epsabs, epsrel, key, limit, &result, &abserr, &neval, &last, work, lwork, iwork, &info, &xx, yy, &irev);
 			if (irev != 0)
 				yy = f_qag(xx);
 		} while (irev != 0);
@@ -574,15 +574,15 @@ void test_qagi()
 	bound = 0;
 	epsabs = 1.0e-10; epsrel = 1.0e-10;
 	inf = 2;
-	qagi(f_qagi, bound, inf, epsabs, epsrel, limit, result, abserr, neval, last, work, lwork, iwork, info);
+	qagi(f_qagi, bound, inf, epsabs, epsrel, limit, &result, &abserr, &neval, &last, work, lwork, iwork, &info);
 	cout << "** qagi [-inf, +inf]\n";
 	cout << "result = " << result << ", abserr = " << abserr << ", neval = " << neval << ", last = " << last << endl;
 	inf = 1;
-	qagi(f_qagi, bound, inf, epsabs, epsrel, limit, result, abserr, neval, last, work, lwork, iwork, info);
+	qagi(f_qagi, bound, inf, epsabs, epsrel, limit, &result, &abserr, &neval, &last, work, lwork, iwork, &info);
 	cout << "** qagi [0, +inf]\n";
 	cout << "result = " << result << ", abserr = " << abserr << ", neval = " << neval << ", last = " << last << endl;
 	inf = -1;
-	qagi(f_qagi, bound, inf, epsabs, epsrel, limit, result, abserr, neval, last, work, lwork, iwork, info);
+	qagi(f_qagi, bound, inf, epsabs, epsrel, limit, &result, &abserr, &neval, &last, work, lwork, iwork, &info);
 	cout << "** qagi [-inf, 0]\n";
 	cout << "result = " << result << ", abserr = " << abserr << ", neval = " << neval << ", last = " << last << endl;
 }
@@ -602,7 +602,7 @@ void test_qagi_r()
 	inf = 2;
 	irev = 0;
 	do {
-		qagi_r(bound, inf, epsabs, epsrel, limit, result, abserr, neval, last, work, lwork, iwork, info, xx, yy, irev);
+		qagi_r(bound, inf, epsabs, epsrel, limit, &result, &abserr, &neval, &last, work, lwork, iwork, &info, &xx, yy, &irev);
 		if (irev != 0)
 			yy = f_qagi(xx);
 	} while (irev != 0);
@@ -611,7 +611,7 @@ void test_qagi_r()
 	inf = 1;
 	irev = 0;
 	do {
-		qagi_r(bound, inf, epsabs, epsrel, limit, result, abserr, neval, last, work, lwork, iwork, info, xx, yy, irev);
+		qagi_r(bound, inf, epsabs, epsrel, limit, &result, &abserr, &neval, &last, work, lwork, iwork, &info, &xx, yy, &irev);
 		if (irev != 0)
 			yy = f_qagi(xx);
 	} while (irev != 0);
@@ -620,7 +620,7 @@ void test_qagi_r()
 	inf = -1;
 	irev = 0;
 	do {
-		qagi_r(bound, inf, epsabs, epsrel, limit, result, abserr, neval, last, work, lwork, iwork, info, xx, yy, irev);
+		qagi_r(bound, inf, epsabs, epsrel, limit, &result, &abserr, &neval, &last, work, lwork, iwork, &info, &xx, yy, &irev);
 		if (irev != 0)
 			yy = f_qagi(xx);
 	} while (irev != 0);
@@ -628,175 +628,153 @@ void test_qagi_r()
 	cout << "result = " << result << ", abserr = " << abserr << ", neval = " << neval << ", last = " << last << endl;
 }
 
-static double alfasq;
-static int neval;
-
-void f_derkf(int n, double t, double y[], double yp[])
+void f_derkfa(int n, double t, double y[], double yp[])
 {
-	double r;
+	double alfa = M_PI_4, r;
 
 	r = y[0]*y[0] + y[1]*y[1];
-	r = r*sqrt(r)/alfasq;
+	r = r*sqrt(r)/(alfa*alfa);
 	yp[0] = y[2];
 	yp[1] = y[3];
 	yp[2] = -y[0]/r;
 	yp[3] = -y[1]/r;
-	neval += 1;
 }
 
-void test_derkf()
+void test_derkfa()
 {
-	const int n = 4, lwork = 9*n + 20, liwork = 20;
-	double t, tout, y[n];
+	const int n = 4, lwork = 11*n + 40, liwork = 40;
+	double t, y[n], tout, tend;
 	double work[lwork]; int iwork[liwork];
-	double tfinal, tprint;
 	int info;
 
-	double ecc = 0.25, alfa = M_PI/4;
+	const double ecc = 0.25, alfa = M_PI_4;
 	double rtol = 1e-10, atol = rtol; int itol = 0;
-	int mode = 0; /* Interval mode */
+	int mode = 2;
 
-	alfasq = alfa*alfa;
+	cout << "** derkfa\n";
 	t = 0;
 	y[0] = 1 - ecc;
 	y[1] = 0;
 	y[2] = 0;
 	y[3] = alfa*sqrt((1 + ecc)/(1 - ecc));
-	tfinal = 12;
-	tprint = 1;
-	cout << "** derkf\n";
-	neval = 0;
+	tend = 12;
 	info = 0;
-	do {
-		tout = t + tprint;
-		derkf(n, f_derkf, t, y, tout, &rtol, &atol, itol, mode, work, lwork, iwork, liwork, info);
-		if (info != 1)
+	for (int i = 1; i <= 12; i++) {
+		tout = i;
+		derkfa(n, f_derkfa, &t, y, tout, tend, &rtol, &atol, itol, mode, work, -lwork, iwork, -liwork, &info);
+		if (info < 0 || info > 10)
 			break;
-		cout << "t = " << t << ", y[1] = " << y[0] << ", y[2] = " << y[1] << ", y[3] = " << y[2] << ", y[4] = " << y[3] << ", neval = " << neval << ", info = " << info << endl;
-	} while (t < tfinal);
+		cout << "t = " << t << ", y[1] = " << y[0] << ", y[2] = " << y[1] << ", y[3] = " << y[2] << ", y[4] = " << y[3] << ", neval = " << iwork[13] << ", info = " << info << endl;
+	}
 	printf("info = %d\n", info);
 }
 
-void test_derkf_2()
+void test_derkfa_r()
 {
-	const int n = 4, lwork = 11*n + 20, liwork = 20;
-	double t, tout, y[n];
-	double work[lwork]; int iwork[liwork];
-	double tfinal, tprint;
-	int info;
-
-	double ecc = 0.25, alfa = M_PI/4;
-	double rtol = 1e-10, atol = rtol; int itol = 0;
-	int mode = 2; // Step mode (dense output)
-
-	alfasq = alfa*alfa;
-	t = 0;
-	y[0] = 1 - ecc;
-	y[1] = 0;
-	y[2] = 0;
-	y[3] = alfa*sqrt((1 + ecc)/(1 - ecc));
-	tfinal = 12;
-	tprint = 1;
-	cout << "** derkf (2)\n";
-	neval = 0;
-	tout = t + tprint;
-	info = 0;
-	do {
-		derkf(n, f_derkf, t, y, tfinal, &rtol, &atol, itol, mode, work, lwork, iwork, liwork, info);
-		if (info == 1 || info == 2) {
-			while (t >= tout) {
-				double y1[n];
-				derkf_int(n, tout, y1, work);
-		cout << "t = " << tout << ", y[1] = " << y1[0] << ", y[2] = " << y1[1] << ", y[3] = " << y1[2] << ", y[4] = " << y1[3] << ", neval = " << neval << ", info = " << info << endl;
-				tout = tout + tprint;
-			}
-		} else
-			break;
-	} while (t < tfinal);
-	printf("info = %d\n", info);
-}
-
-void test_derkf_r()
-{
-	const int n = 4, lwork = 7*n + 20, liwork = 20;
-	double t, tout, y[n];
+	const int n = 4, lwork = 9*n + 40, liwork = 40;
+	double t, y[n], tout, tend;
 	double work[lwork]; int iwork[liwork];
 	double tt, yy[n], yyp[n]; int irev;
-	double tfinal, tprint;
 	int info;
 
-	double ecc = 0.25, alfa = M_PI/4;
+	const double ecc = 0.25, alfa = M_PI_4;
 	double rtol = 1e-10, atol = rtol; int itol = 0;
-	int mode = 0; /* Interval mode */
+	int mode = 2;
 
-	alfasq = alfa*alfa;
+	cout << "** derkfa_r\n";
 	t = 0;
 	y[0] = 1 - ecc;
 	y[1] = 0;
 	y[2] = 0;
 	y[3] = alfa*sqrt((1 + ecc)/(1 - ecc));
-	tfinal = 12;
-	tprint = 1;
-	cout << "** derkf_r\n";
-	neval = 0;
+	tend = 12;
 	info = 0;
-	do {
-		tout = t + tprint;
+	for (int i = 1; i <= 12; i++) {
+		tout = i;
 		irev = 0;
 		do {
-			derkf_r(n, t, y, tout, &rtol, &atol, itol, mode, work, lwork, iwork, liwork, info, tt, yy, yyp, irev);
+			derkfa_r(n, &t, y, tout, tend, &rtol, &atol, itol, mode, work, -lwork, iwork, -liwork, &info, &tt, yy, yyp, &irev);
 			if (irev != 0)
-				f_derkf(n, tt, yy, yyp);
+				f_derkfa(n, tt, yy, yyp);
 		} while (irev != 0);
-		if (info != 1)
+		if (info < 0 || info > 10)
 			break;
-		cout << "t = " << t << ", y[1] = " << y[0] << ", y[2] = " << y[1] << ", y[3] = " << y[2] << ", y[4] = " << y[3] << ", neval = " << neval << ", info = " << info << endl;
-	} while (t < tfinal);
+		cout << "t = " << t << ", y[1] = " << y[0] << ", y[2] = " << y[1] << ", y[3] = " << y[2] << ", y[4] = " << y[3] << ", neval = " << iwork[13] << ", info = " << info << endl;
+	}
 	printf("info = %d\n", info);
 }
 
-void test_derkf_r_2()
+void f_dopn43(int n, double t, double y[], double ypp[])
 {
-	const int n = 4, lwork = 11*n + 20, liwork = 20;
-	double t, tout, y[n];
+	double alfa = M_PI_4, r;
+
+	r = y[0]*y[0] + y[1]*y[1];
+	r = r*sqrt(r)/(alfa*alfa);
+	ypp[0] = -y[0]/r;
+	ypp[1] = -y[1]/r;
+}
+
+void test_dopn43()
+{
+	const int n = 2, lwork = 10*n + 40, liwork = 30;
+	double t, y[n], yp[n], tout, tend;
 	double work[lwork]; int iwork[liwork];
-	double tt, yy[n], yyp[n]; int irev;
-	double tfinal, tprint;
 	int info;
 
-	double ecc = 0.25, alfa = M_PI/4;
+	const double ecc = 0.25, alfa = M_PI_4;
 	double rtol = 1e-10, atol = rtol; int itol = 0;
-	int mode = 2; // Step mode (dense output)
+	int mode = 2;
 
-	alfasq = alfa*alfa;
+	cout << "** dopn43\n";
 	t = 0;
 	y[0] = 1 - ecc;
 	y[1] = 0;
-	y[2] = 0;
-	y[3] = alfa*sqrt((1 + ecc)/(1 - ecc));
-	tfinal = 12;
-	tprint = 1;
-	cout << "** derkf_r (2)\n";
-	neval = 0;
-	tout = t + tprint;
+	yp[0] = 0;
+	yp[1] = alfa*sqrt((1 + ecc)/(1 - ecc));
+	tend = 12;
 	info = 0;
-	do {
+	for (int i = 1; i <= 12; i++) {
+		tout = i;
+		dopn43(n, f_dopn43, &t, y, yp, tout, tend, &rtol, &atol, itol, mode, work, -lwork, iwork, -liwork, &info);
+		if (info < 0 || info > 10)
+			break;
+		cout << "t = " << t << ", y[1] = " << y[0] << ", y[2] = " << y[1] << ", yp[0] = " << yp[0] << ", yp[1] = " << yp[1] << ", neval = " << iwork[13] << ", info = " << info << endl;
+	}
+	printf("info = %d\n", info);
+}
+
+void test_dopn43_r()
+{
+	const int n = 2, lwork = 8*n + 40, liwork = 30;
+	double t, y[n], yp[n], tout, tend;
+	double work[lwork]; int iwork[liwork];
+	double tt, yy[n], yypp[n]; int irev;
+	int info;
+
+	const double ecc = 0.25, alfa = M_PI_4;
+	double rtol = 1e-10, atol = rtol; int itol = 0;
+	int mode = 2;
+
+	cout << "** dopn43_r\n";
+	t = 0;
+	y[0] = 1 - ecc;
+	y[1] = 0;
+	yp[0] = 0;
+	yp[1] = alfa*sqrt((1 + ecc)/(1 - ecc));
+	tend = 12;
+	info = 0;
+	for (int i = 1; i <= 12; i++) {
+		tout = i;
 		irev = 0;
 		do {
-			derkf_r(n, t, y, tfinal, &rtol, &atol, itol, mode, work, lwork, iwork, liwork, info, tt, yy, yyp, irev);
+			dopn43_r(n, &t, y, yp, tout, tend, &rtol, &atol, itol, mode, work, -lwork, iwork, -liwork, &info, &tt, yy, yypp, &irev);
 			if (irev != 0)
-				f_derkf(n, tt, yy, yyp);
+				f_dopn43(n, tt, yy, yypp);
 		} while (irev != 0);
-		if (info == 1 || info == 2) {
-			while (t >= tout) {
-				double y1[n];
-				derkf_int(n, tout, y1, work);
-		cout << "t = " << tout << ", y[1] = " << y1[0] << ", y[2] = " << y1[1] << ", y[3] = " << y1[2] << ", y[4] = " << y1[3] << ", neval = " << neval << ", info = " << info << endl;
-				tout = tout + tprint;
-			}
-		} else
+		if (info < 0 || info > 10)
 			break;
-	} while (t < tfinal);
+		cout << "t = " << t << ", y[1] = " << y[0] << ", y[2] = " << y[1] << ", yp[0] = " << yp[0] << ", yp[1] = " << yp[1] << ", neval = " << iwork[13] << ", info = " << info << endl;
+	}
 	printf("info = %d\n", info);
 }
 
@@ -811,7 +789,7 @@ void test_rfft1()
 	cout << "** rfft1\n";
 	seed = 13;
 	init_genrand(seed);
-	rfft1i(n, wsave, lwsave, info);
+	rfft1i(n, wsave, lwsave, &info);
 	if (info != 0) {
 		cout << "Error during initialization\n";
 		return;
@@ -823,13 +801,13 @@ void test_rfft1()
 		rcopy[k] = r[k];
 	}
 	// Forward transform
-	rfft1f(n, inc, r, lr, wsave, lwsave, work, lwork, info);
+	rfft1f(n, inc, r, lr, wsave, lwsave, work, lwork, &info);
 	if (info != 0) {
 		cout << "Error in rfft1f\n";
 		return;
 	}
 	// Backward transform
-	rfft1b(n, inc, r, lr, wsave, lwsave, work, lwork, info);
+	rfft1b(n, inc, r, lr, wsave, lwsave, work, lwork, &info);
 	if (info != 0) {
 		cout << "Error in rfft1b\n";
 		return;
@@ -845,7 +823,7 @@ void test_rfft1()
 	cout << "diff(max) = " << diff << endl;
 }
 
-void f_lmdif1(int m, int n, double x[], double fvec[], int& iflag)
+void f_lmdif1(int m, int n, double x[], double fvec[], int *iflag)
 {
 	double xdata[] = { 77.6, 114.9, 141.1, 190.8, 239.9, 289.0, 332.8, 378.4,
 		434.8, 477.3, 536.8, 593.1, 689.1, 760.0 };
@@ -863,7 +841,7 @@ void test_lmdif1()
 	int iwork[liwork], info;
 
 	x[0] = 500; x[1] = 0.0001;
-	lmdif1(f_lmdif1, m, n, x, fvec, tol, work, lwork, iwork, info);
+	lmdif1(f_lmdif1, m, n, x, fvec, tol, work, lwork, iwork, &info);
 	cout << "** lmdif1\n";
 	cout << "x[1] = " << x[0] << ", x[2] = " << x[1] << endl;
 	cout << "info = " << info << endl;
@@ -880,10 +858,10 @@ void test_lmdif1_r()
 	x[0] = 500; x[1] = 0.0001;
 	irev = 0;
 	do {
-		lmdif1_r(m, n, x, fvec, tol, work, lwork, iwork, info, xx, yy, irev);
+		lmdif1_r(m, n, x, fvec, tol, work, lwork, iwork, &info, xx, yy, &irev);
 		if (irev >= 1 && irev <= 3) {
 			iflag = 1;
-			f_lmdif1(m, n, xx, yy, iflag);
+			f_lmdif1(m, n, xx, yy, &iflag);
 		}
 	} while (irev != 0);
 	cout << "** lmdif1_r\n";
@@ -949,14 +927,15 @@ int main()
 	test_qag_r();
 	test_qagi();
 	test_qagi_r();
-	test_derkf();
-	test_derkf_r();
-	test_derkf_2();
-	test_derkf_r_2();
+	test_derkfa();
+	test_derkfa_r();
+	test_dopn43();
+	test_dopn43_r();
 	test_rfft1();
 	test_lmdif1();
 	test_lmdif1_r();
 	test_rand(); test_rand();
 	test_dlamch();
+
 	return 0;
 }

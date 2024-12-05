@@ -1,0 +1,54 @@
+** csr_dense **
+info = 0
+** dense_csr **
+info = 0
+** csr_coo **
+info = 0
+** coo_csr **
+info = 0
+** csr_ssr **
+info = 0
+** ssr_csr **
+info = 0
+** csr_trans **
+info = 0
+** csr_dusmv **
+info =  0
+err = 0.0
+** csr_dussv **
+info =  0
+err = 2.7755575615628914e-17
+** csr_dusmm **
+info =  0
+err = 3.3306690738754695e-17
+** csr_dussm **
+info =  0
+err = 2.312964634635743e-17
+** ssr_dusmv **
+info =  0
+err = 3.3306690738754696e-16
+** cg1 **
+info = 0 , iter = 4 , res = 1.0805389623995985e-16
+[ 0.54  0.1   0.97 -0.32]
+** bicg1 **
+info = 0 , iter = 4 , res = 3.1429283686200387e-16
+[ 0.54  0.1   0.97 -0.32]
+** mmio **
+mm_write1: info = 0
+mm_read_info: info = 0
+5 4 16 0 0 0
+mm_read1: info = (0, 5, 4)
+** csr_check **
+m =  5 , n =  4
+csr_check: info =  0
+  base =  0
+  nnz =  16
+  nnz_lower =  8
+  nnz_upper =  4
+  nnz_diag =  4
+  n_zero =  0
+  n_zero_diag =  0
+  empty_rows =  0
+  unsorted_rows =  0
+  invalid_inds =  0
+  symmetric =  0

@@ -2,8 +2,8 @@
  *                                      *
  *  C/C++ interface to XLPack           *
  *  Test program                        *
- *  Version 6.0 (June 14, 2022)         *
- *  (C) 2014-2022  K Technologies       *
+ *  Version 7.0 (January 31, 2023)      *
+ *  (C) 2014-2023  K Technologies       *
  *                                      *
  ****************************************/
 
@@ -292,7 +292,7 @@ void test_dgels()
 /* Parameters for test_pchse */
 #define N	4
 #define NE	2
-#define LWORK	2*N
+#define LWORK	(2*N)
 
 void test_pchse()
 {
@@ -320,7 +320,7 @@ void test_pchse()
 
 /* Parameters for test_pchia */
 #define N	7
-#define LWORK	2*N
+#define LWORK	(2*N)
 
 void test_pchia()
 {
@@ -348,7 +348,7 @@ void test_pchia()
 
 /* Parameters for test_rpzero2 */
 #define N	5
-#define LWORK	8*N + 6
+#define LWORK	(8*N + 6)
 
 void test_rpzero2()
 {
@@ -405,7 +405,7 @@ void test_dfzero_r()
 
 /* Parameters for test_hybrd1 */
 #define N	2
-#define LWORK	N*(3*N + 17)/2
+#define LWORK	(N*(3*N + 17)/2)
 
 void f_hybrd1(int n, double x[], double fvec[], int *iflag)
 {
@@ -488,7 +488,7 @@ void test_dfmin_r()
 
 /* Parameters for test_optif0 */
 #define N	2
-#define LWORK	N*(N + 11)
+#define LWORK	(N*(N + 11))
 
 void f_optif0(int n, double x[], double *fval)
 {
@@ -572,7 +572,7 @@ void test_qk15_r()
 
 /* Parameters for test_qag */
 #define LIMIT	100
-#define LWORK	4*LIMIT
+#define LWORK	(4*LIMIT)
 #define LIWORK	LIMIT
 
 double f_qag(double x)
@@ -626,7 +626,7 @@ void test_qag_r()
 
 /* Parameters for test_qagi */
 #define LIMIT	100
-#define LWORK	4*LIMIT
+#define LWORK	(4*LIMIT)
 #define LIWORK	LIMIT
 
 double f_qagi(double x)
@@ -704,183 +704,177 @@ void test_qagi_r()
 #undef LWORK
 #undef LIWORK
 
-/* Parameters for test_derkf */
+/* Parameters for test_derkfa */
 #define N	4
-#define LWORK	9*N + 20
-#define LIWORK	20
+#define LWORK	(11*N + 40)
+#define LIWORK	40
 
-static double alfasq;
-static int neval;
-
-void f_derkf(int n, double t, double y[], double yp[])
+void f_derkfa(int n, double t, double y[], double yp[])
 {
-	double r;
+	double alfa = M_PI_4, r;
 
 	r = y[0]*y[0] + y[1]*y[1];
-	r = r*sqrt(r)/alfasq;
+	r = r*sqrt(r)/(alfa*alfa);
 	yp[0] = y[2];
 	yp[1] = y[3];
 	yp[2] = -y[0]/r;
 	yp[3] = -y[1]/r;
-	neval += 1;
 }
 
-void test_derkf()
+void test_derkfa()
 {
 	int n = N;
-	double t, y[N], tout;
-	double work[LWORK]; int lwork = LWORK, iwork[LIWORK], liwork = LIWORK;
-	double tfinal, tprint;
+	double t, y[N], tout, tend;
+	double work[LWORK];
+	int lwork = LWORK, iwork[LIWORK], liwork = LIWORK;
 	int info;
 
-	double ecc = 0.25, alfa = M_PI/4;
+	double ecc = 0.25, alfa = M_PI_4;
 	double rtol = 1e-10, atol = rtol; int itol = 0;
-	int mode = 0; /* Interval mode */
+	int mode = 2;
 
-	alfasq = alfa*alfa;
+	printf("** derkfa\n");
 	t = 0;
 	y[0] = 1 - ecc;
 	y[1] = 0;
 	y[2] = 0;
 	y[3] = alfa*sqrt((1 + ecc)/(1 - ecc));
-	tfinal = 12;
-	tprint = 1;
-	printf("** derkf\n");
-	neval = 0;
+	tend = 12;
 	info = 0;
-	do {
-		tout = t + tprint;
-		derkf(n, f_derkf, &t, y, tout, &rtol, &atol, itol, mode, work, lwork, iwork, liwork, &info);
-		if (info != 1)
+	for (int i = 1; i <= 12; i++) {
+		tout = i;
+		derkfa(n, f_derkfa, &t, y, tout, tend, &rtol, &atol, itol, mode, work, -lwork, iwork, -liwork, &info);
+		if (info < 0 || info > 10)
 			break;
-		printf("%4.1f  %15.10f  %15.10f  %15.10f  %15.10f  %d  %d\n", t, y[0], y[1], y[2], y[3], neval, info);
-	} while (t < tfinal);
-	printf("info = %d\n", info);
-}
-
-void test_derkf_2()
-{
-	int n = N;
-	double t, y[N], tout;
-	double work[LWORK + 2*N]; int lwork = LWORK + 2*N, iwork[LIWORK], liwork = LIWORK;
-	double tfinal, tprint;
-	int info;
-
-	double ecc = 0.25, alfa = M_PI/4;
-	double rtol = 1e-10, atol = rtol; int itol = 0;
-	int mode = 2; /* Step mode (dense output) */
-
-	alfasq = alfa*alfa;
-	t = 0;
-	y[0] = 1 - ecc;
-	y[1] = 0;
-	y[2] = 0;
-	y[3] = alfa*sqrt((1 + ecc)/(1 - ecc));
-	tfinal = 12;
-	tprint = 1;
-	printf("** derkf (2)\n");
-	neval = 0;
-	tout = t + tprint;
-	info = 0;
-	do {
-		derkf(n, f_derkf, &t, y, tfinal, &rtol, &atol, itol, mode, work, lwork, iwork, liwork, &info);
-		if (info == 1 || info == 2) {
-			while (t >= tout) {
-				double y1[N];
-				derkf_int(n, tout, y1, work);
-				printf("%4.1f  %15.10f  %15.10f  %15.10f  %15.10f  %d  %d\n", tout, y1[0], y1[1], y1[2], y1[3], neval, info);
-				tout = tout + tprint;
-			}
-		} else
-			break;
-	} while (t < tfinal);
+		printf("%4.1f  %15.10f  %15.10f  %15.10f  %15.10f  %d  %d\n", t, y[0], y[1], y[2], y[3], iwork[13], info);
+	}
 	printf("info = %d\n", info);
 }
 
 #undef LWORK
-#define LWORK	7*N + 20
+#define LWORK	(9*N + 40)
 
-void test_derkf_r()
+void test_derkfa_r()
 {
 	int n = N;
-	double t, y[N], tout;
-	double work[LWORK]; int lwork = LWORK, iwork[LIWORK], liwork = LIWORK;
+	double t, y[N], tout, tend;
+	double work[LWORK];
+	int lwork = LWORK, iwork[LIWORK], liwork = LIWORK;
 	double tt, yy[N], yyp[N]; int irev;
-	double tfinal, tprint;
 	int info;
 
-	double ecc = 0.25, alfa = M_PI/4;
+	double ecc = 0.25, alfa = M_PI_4;
 	double rtol = 1e-10, atol = rtol; int itol = 0;
-	int mode = 0; /* Interval mode */
+	int mode = 2;
 
-	alfasq = alfa*alfa;
+	printf("** derkfa_r\n");
 	t = 0;
 	y[0] = 1 - ecc;
 	y[1] = 0;
 	y[2] = 0;
 	y[3] = alfa*sqrt((1 + ecc)/(1 - ecc));
-	tfinal = 12;
-	tprint = 1;
-	printf("** derkf_r\n");
-	neval = 0;
+	tend = 12;
 	info = 0;
-	do {
-		tout = t + tprint;
+	for (int i = 1; i <= 12; i++) {
+		tout = i;
 		irev = 0;
 		do {
-			derkf_r(n, &t, y, tout, &rtol, &atol, itol, mode, work, lwork, iwork, liwork, &info, &tt, yy, yyp, &irev);
+			derkfa_r(n, &t, y, tout, tend, &rtol, &atol, itol, mode, work, -lwork, iwork, -liwork, &info, &tt, yy, yyp, &irev);
 			if (irev != 0)
-				f_derkf(n, tt, yy, yyp);
+				f_derkfa(n, tt, yy, yyp);
 		} while (irev != 0);
-		if (info != 1)
+		if (info < 0 || info > 10)
 			break;
-		printf("%4.1f  %15.10f  %15.10f  %15.10f  %15.10f  %d  %d\n", t, y[0], y[1], y[2], y[3], neval, info);
-	} while (t < tfinal);
+		printf("%4.1f  %15.10f  %15.10f  %15.10f  %15.10f  %d  %d\n", t, y[0], y[1], y[2], y[3], iwork[13], info);
+	}
 	printf("info = %d\n", info);
 }
 
-void test_derkf_r_2()
+#undef N
+#undef LWORK
+#undef LIWORK
+
+/* Parameters for test_dopn43 */
+#define N	2
+#define LWORK	(10*N + 40)
+#define LIWORK	30
+
+void f_dopn43(int n, double t, double y[], double ypp[])
+{
+	double alfa = M_PI_4, r;
+
+	r = y[0]*y[0] + y[1]*y[1];
+	r = r*sqrt(r)/(alfa*alfa);
+	ypp[0] = -y[0]/r;
+	ypp[1] = -y[1]/r;
+}
+
+void test_dopn43()
 {
 	int n = N;
-	double t, y[N], tout;
-	double work[LWORK + 2*N]; int lwork = LWORK + 2*N, iwork[LIWORK], liwork = LIWORK;
-	double tt, yy[N], yyp[N]; int irev;
-	double tfinal, tprint;
+	double t, y[N], yp[N], tout, tend;
+	double work[LWORK];
+	int lwork = LWORK, iwork[LIWORK], liwork = LIWORK;
 	int info;
 
-	double ecc = 0.25, alfa = M_PI/4;
+	double ecc = 0.25, alfa = M_PI_4;
 	double rtol = 1e-10, atol = rtol; int itol = 0;
-	int mode = 2; /* Step mode (dense output) */
+	int mode = 2;
 
-	alfasq = alfa*alfa;
+	printf("** dopn43\n");
 	t = 0;
 	y[0] = 1 - ecc;
 	y[1] = 0;
-	y[2] = 0;
-	y[3] = alfa*sqrt((1 + ecc)/(1 - ecc));
-	tfinal = 12;
-	tprint = 1;
-	printf("** derkf_r (2)\n");
-	neval = 0;
-	tout = t + tprint;
+	yp[0] = 0;
+	yp[1] = alfa*sqrt((1 + ecc)/(1 - ecc));
+	tend = 12;
 	info = 0;
-	do {
+	for (int i = 1; i <= 12; i++) {
+		tout = i;
+		dopn43(n, f_dopn43, &t, y, yp, tout, tend, &rtol, &atol, itol, mode, work, -lwork, iwork, -liwork, &info);
+		if (info < 0 || info > 10)
+			break;
+		printf("%4.1f  %15.10f  %15.10f  %15.10f  %15.10f  %d  %d\n", t, y[0], y[1], yp[0], yp[1], iwork[13], info);
+	}
+	printf("info = %d\n", info);
+}
+
+#undef LWORK
+#define LWORK	(8*N + 40)
+
+void test_dopn43_r()
+{
+	int n = N;
+	double t, y[N], yp[N], tout, tend;
+	double work[LWORK];
+	int lwork = LWORK, iwork[LIWORK], liwork = LIWORK;
+	double tt, yy[N], yypp[N]; int irev;
+	int info;
+
+	double ecc = 0.25, alfa = M_PI_4;
+	double rtol = 1e-10, atol = rtol; int itol = 0;
+	int mode = 2;
+
+	printf("** dopn43_r\n");
+	t = 0;
+	y[0] = 1 - ecc;
+	y[1] = 0;
+	yp[0] = 0;
+	yp[1] = alfa*sqrt((1 + ecc)/(1 - ecc));
+	tend = 12;
+	info = 0;
+	for (int i = 1; i <= 12; i++) {
+		tout = i;
 		irev = 0;
 		do {
-			derkf_r(n, &t, y, tfinal, &rtol, &atol, itol, mode, work, lwork, iwork, liwork, &info, &tt, yy, yyp, &irev);
+			dopn43_r(n, &t, y, yp, tout, tend, &rtol, &atol, itol, mode, work, -lwork, iwork, -liwork, &info, &tt, yy, yypp, &irev);
 			if (irev != 0)
-				f_derkf(n, tt, yy, yyp);
+				f_dopn43(n, tt, yy, yypp);
 		} while (irev != 0);
-		if (info == 1 || info == 2) {
-			while (t >= tout) {
-				double y1[N];
-				derkf_int(n, tout, y1, work);
-				printf("%4.1f  %15.10f  %15.10f  %15.10f  %15.10f  %d  %d\n", tout, y1[0], y1[1], y1[2], y1[3], neval, info);
-				tout = tout + tprint;
-			}
-		} else
+		if (info < 0 || info > 10)
 			break;
-	} while (t < tfinal);
+		printf("%4.1f  %15.10f  %15.10f  %15.10f  %15.10f  %d  %d\n", t, y[0], y[1], yp[0], yp[1], iwork[13], info);
+	}
 	printf("info = %d\n", info);
 }
 
@@ -892,7 +886,7 @@ void test_derkf_r_2()
 #define N	10
 #define LWSAVE	17
 #define INC	1
-#define LR	INC*(N - 1) + 1
+#define LR	(INC*(N - 1) + 1)
 #define LWORK	N
 
 void test_rfft1()
@@ -948,7 +942,7 @@ void test_rfft1()
 /* Parameters for test_lmdif1 */
 #define M	14
 #define N	2
-#define LWORK	N*(M + 6) + 2*M
+#define LWORK	(N*(M + 6) + 2*M)
 #define LIWORK	N
 
 void f_lmdif1(int m, int n, double x[], double fvec[], int *iflag)
@@ -1057,14 +1051,15 @@ int main()
 	test_qag_r();
 	test_qagi();
 	test_qagi_r();
-	test_derkf();
-	test_derkf_r();
-	test_derkf_2();
-	test_derkf_r_2();
+	test_derkfa();
+	test_derkfa_r();
+	test_dopn43();
+	test_dopn43_r();
 	test_rfft1();
 	test_lmdif1();
 	test_lmdif1_r();
 	test_rand(); test_rand();
 	test_dlamch();
+
 	return 0;
 }

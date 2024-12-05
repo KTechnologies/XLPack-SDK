@@ -1,0 +1,56 @@
+** Test csr_dense
+info = 0
+** Test dense_csr
+info = 0
+** Test csr_coo
+info = 0
+** Test coo_csr
+info = 0
+** Test csr_ssr
+info = 0
+** Test ssr_csr
+info = 0
+** Test csc_csr
+info = 0
+** Test csr_dusmv
+info = 0
+err = 0
+** Test csr_dussv
+info = 0
+err = 1.11022302462516E-16
+** Test csr_dusmm
+info = 0
+err = 4.44089209850063E-16
+** Test csr_dussm
+info = 0
+err = 1.11022302462516E-16
+** Test ssr_dusmv
+info = 0
+err = 8.88178419700125E-16
+** Test_cg1
+x =
+0.54  0.100000000000001  0.97  -0.32
+iter = 4, res = 2.12065276763405E-15, info = 0
+** Test_bicg1
+x =
+0.54  0.1  0.97  -0.32
+iter = 4, res = 1.33970181527159E-15, info = 0
+** Test mmio
+mm_write: info = 0
+mm_read: info = 0
+m = 5, n = 4, nnz = 16, matcode = MCRS
+** Test csr_check
+csr_check: info = 0
+  base = 0
+  nnz = 13
+  nnz_lower = 5
+  nnz_upper = 4
+  nnz_diag = 4
+  n_zero = 0
+  n_zero_diag = 0
+  empty_rows = 0
+  unsorted_rows = 0
+  invalid_inds = 0
+** Test csr_check_sym
+csx_check_sym: info = 1
+csx_check_sym: info = 0
